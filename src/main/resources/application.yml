@@ -3,6 +3,10 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/live_lyrics?serverTimezone=UTC
     username: root
     password: 19980518
+  mongodb:
+    host: localhost
+    port: 27017
+    database: live_lyrics
   redis:
     host: localhost
     port: 6379

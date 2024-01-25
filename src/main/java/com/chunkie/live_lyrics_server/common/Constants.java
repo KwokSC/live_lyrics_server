@@ -21,11 +21,10 @@ public interface Constants {
     }
 
     interface AWS{
-        String BUCKET = "pmp-server-bucket";
+        String BUCKET = "live-lyrics-bucket";
     }
 
     interface Auth{
-
         long EXP = 30;
     }
 

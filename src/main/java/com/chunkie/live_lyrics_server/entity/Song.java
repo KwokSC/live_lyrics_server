@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class Song {
 
     private String songId;
@@ -15,6 +14,6 @@ public class Song {
 
     private String songAlbum;
 
-    private Integer songDuration;
+    private Long songDuration;
 
 }

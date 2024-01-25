@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunkie.live_lyrics_server.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.chunkie.live_lyrics_server.entity.User">
+        <id column="user_account" jdbcType="VARCHAR" property="userAccount" />
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    </resultMap>
+
+    <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM user_info WHERE user_account = #{userAccount}
+    </select>
+
+</mapper>

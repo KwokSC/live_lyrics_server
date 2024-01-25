@@ -4,17 +4,14 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "playStatus")
+import java.util.List;
+
+@Document(collection = "programmes")
 @Data
-public class PlayStatus {
+public class Programme {
 
     @Id
     private String roomId;
 
-    private String currentSongId;
-
-    private String currentTime;
-
-    private Boolean isPaused;
-
+    private List<Program> programList;
 }

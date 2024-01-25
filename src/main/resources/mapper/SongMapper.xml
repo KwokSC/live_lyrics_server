@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chunkie.live_lyrics_server.mapper.SongMapper">
-    <resultMap id="" type="com.chunkie.live_lyrics_server.entity.Song">
-
+    <resultMap id="BaseResultMap" type="com.chunkie.live_lyrics_server.entity.Song">
+        <id column="song_id" jdbcType="VARCHAR" property="songId" />
+        <result column="song_artist" jdbcType="VARCHAR" property="songArtist" />
+        <result column="song_album" jdbcType="VARCHAR" property="songAlbum" />
+        <result column="song_name" jdbcType="VARCHAR" property="songName"/>
+        <result column="song_duration" jdbcType="BIGINT" property="songDuration"/>
     </resultMap>
+    
+    <insert id="addSong" parameterType="com.chunkie.live_lyrics_server.entity.Song">
+        INSERT INTO song_info(song_id, song_name, song_artist, song_album, song_duration)
+        VALUES (#{songId}, #{songName}, #{songArtist}, #{songAlbum}, #{songDuration})
+    </insert>
 </mapper>
