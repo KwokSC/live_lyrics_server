@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.chunkie.live_lyrics_server.entity.User">
         <id column="user_account" jdbcType="VARCHAR" property="userAccount" />
         <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
     </resultMap>
 
     <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">

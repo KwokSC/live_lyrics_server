@@ -12,11 +12,10 @@ public class AWSConfig {
 
     @Bean
     public AmazonS3 amazonS3() {
-        AmazonS3 s3client = AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new DefaultAWSCredentialsProviderChain())
                 .withRegion(Regions.AP_SOUTHEAST_2)
                 .build();
-        return s3client;
     }
 }

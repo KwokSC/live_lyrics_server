@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ProgrammeRepository extends MongoRepository<Programme, String> {
 
-    Programme findByRoomId(String roomId);
+    Programme findByProgrammeId(String programmeId);
 }

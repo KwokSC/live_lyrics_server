@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.chunkie.live_lyrics_server.common.Constants;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +30,7 @@ public class S3Service {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
-            String extension = getExtension(file);
-            PutObjectResult result = amazonS3.putObject(bucketName, key+extension, file.getInputStream(), new ObjectMetadata());
+            PutObjectResult result = amazonS3.putObject(bucketName, file.getOriginalFilename(), file.getInputStream(), new ObjectMetadata());
             return result.getMetadata() != null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,8 +42,17 @@ public class S3Service {
         amazonS3.deleteObject(bucketName, key);
     }
 
-    public S3Object getFile(String key) {
-        return amazonS3.getObject(bucketName, key);
+    public String getFile(String key) {
+        try{
+            S3Object object = amazonS3.getObject(bucketName, key);
+            return getS3Url(object);
+        }catch (AmazonS3Exception e){
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND.value())
+                return null;
+            else
+                throw e;
+        }
+
     }
 
     public List<Bucket> listBuckets() {

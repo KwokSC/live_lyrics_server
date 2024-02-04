@@ -6,5 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RoomMapper {
 
-    Room getRoomById(String roomId);
+    int createRoom(Room room);
+
+    int updateRoomById(Room room);
+
+    Room getRoomByRoomId(String roomId);
+
+    Room getRoomByUserId(String userId);
 }

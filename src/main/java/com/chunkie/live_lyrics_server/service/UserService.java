@@ -18,7 +18,6 @@ public class UserService {
     public String authenticateUser(User user){
         User u = userMapper.getUserById(user.getUserAccount());
         if (u != null && u.getUserPassword().equals(user.getUserPassword())){
-
             return authService.generateToken(u.getUserAccount());
         }else
             return null;

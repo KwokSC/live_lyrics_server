@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PlayStatusRepository extends MongoRepository<PlayStatus, String> {
 
-    PlayStatus getPlayStatusByRoomId(String roomId);
+    PlayStatus getPlayStatusByPlayStatusId(String playStatusId);
 }

@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SongMapper {
 
     int addSong(Song song);
+
+    Song getSongById(String id);
 }

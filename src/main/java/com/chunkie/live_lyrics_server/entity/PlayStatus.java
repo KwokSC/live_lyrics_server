@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PlayStatus {
 
     @Id
-    private String roomId;
+    private String playStatusId;
 
-    private String currentSongId;
+    private String currentSong;
 
     private String currentTime;
 
-    private Boolean isPaused;
+    private Boolean isPlaying;
 
 }

@@ -13,4 +13,9 @@
         INSERT INTO song_info(song_id, song_name, song_artist, song_album, song_duration)
         VALUES (#{songId}, #{songName}, #{songArtist}, #{songAlbum}, #{songDuration})
     </insert>
+
+    <select id="getSongById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM song_info
+        WHERE song_id = #{songId}
+    </select>
 </mapper>
