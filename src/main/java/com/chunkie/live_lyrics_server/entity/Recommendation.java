@@ -6,9 +6,6 @@ import org.springframework.data.annotation.Id;
 @Data
 public class Recommendation {
 
-    @Id
-    private String recommendationId;
-
     private String type;
 
     private String content;

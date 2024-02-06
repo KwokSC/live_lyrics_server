@@ -1,9 +1,6 @@
 package com.chunkie.live_lyrics_server.controller;
 
 
-import com.chunkie.live_lyrics_server.common.Constants;
-import com.chunkie.live_lyrics_server.common.ResponseObject;
-import com.chunkie.live_lyrics_server.dto.RoomDTO;
 import com.chunkie.live_lyrics_server.entity.PlayStatus;
 import com.chunkie.live_lyrics_server.service.RoomService;
 import com.google.gson.Gson;
@@ -27,20 +24,15 @@ public class WebSocketController {
 
     @MessageMapping("/playStatus/{roomId}")
     @SendTo("/topic/playStatus/{roomId}")
-    public ResponseObject playStatus(@Payload String message, @DestinationVariable String roomId){
-        ResponseObject responseObject = new ResponseObject();
+    public PlayStatus playStatus(@Payload String message, @DestinationVariable String roomId) {
         PlayStatus playStatus = gson.fromJson(message, PlayStatus.class);
         playStatus.setPlayStatusId("playStatus_" + roomId);
         roomService.updatePlayStatus(playStatus);
-        responseObject.setData(playStatus);
-        responseObject.setCode(Constants.Code.NORMAL);
-        responseObject.setMsg(Constants.Msg.SUCCESS);
-        return responseObject;
+        return playStatus;
     }
 
     @SubscribeMapping("/playStatus/{roomId}")
-    public ResponseObject getCurrentStatus(@DestinationVariable String roomId){
-        PlayStatus playStatus = roomService.getPlayStatusByRoomId("playStatus_"+roomId);
-        return new ResponseObject(playStatus, Constants.Code.NORMAL, Constants.Msg.SUCCESS);
+    public PlayStatus getCurrentStatus(@DestinationVariable String roomId) {
+        return roomService.getPlayStatusByRoomId("playStatus_" + roomId);
     }
 }

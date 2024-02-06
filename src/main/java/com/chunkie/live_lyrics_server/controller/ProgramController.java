@@ -20,11 +20,6 @@ public class ProgramController {
     @Resource
     private SongService songService;
 
-    @RequestMapping("/program/uploadAudio")
-    public ResponseObject uploadAudio(MultipartFile audio){
-        return new ResponseObject();
-    }
-
     @RequestMapping("/program/uploadProgram")
     public ResponseObject uploadProgram(@RequestBody Program program){
         return new ResponseObject();

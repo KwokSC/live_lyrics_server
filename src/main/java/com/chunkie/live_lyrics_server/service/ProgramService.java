@@ -35,24 +35,4 @@ public class ProgramService {
         }
         return null;
     }
-
-    public Boolean uploadAudio(MultipartFile audio){
-        return s3Service.uploadFile("/resources/audio/" + audio.getOriginalFilename(), audio);
-    }
-
-    public Boolean uploadLyric(MultipartFile lyric){
-        return s3Service.uploadFile("/resources/lyric/" + lyric.getOriginalFilename(), lyric);
-    }
-
-    private long getAudioDuration(MultipartFile file) {
-        try {
-            File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-            file.transferTo(convertedFile);
-            AudioFile audioFile = AudioFileIO.read(convertedFile);
-            return audioFile.getAudioHeader().getTrackLength();
-        } catch (CannotReadException | IOException | TagException | InvalidAudioFrameException | ReadOnlyFileException e) {
-            e.printStackTrace();
-        }
-        return -1; // Indicates failure to get the audio duration
-    }
 }
