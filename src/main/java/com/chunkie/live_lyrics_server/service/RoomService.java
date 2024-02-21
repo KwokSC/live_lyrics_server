@@ -2,10 +2,10 @@ package com.chunkie.live_lyrics_server.service;
 
 import com.chunkie.live_lyrics_server.dto.ProgramDTO;
 import com.chunkie.live_lyrics_server.dto.ProgrammeDTO;
+import com.chunkie.live_lyrics_server.dto.RoomDTO;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.mapper.RoomMapper;
-import com.chunkie.live_lyrics_server.repo.PlayStatusRepository;
 import com.chunkie.live_lyrics_server.repo.ProgrammeRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +28,6 @@ public class RoomService {
     private ProgrammeRepository programmeRepository;
 
     @Resource
-    private PlayStatusRepository playStatusRepository;
-
-    @Resource
     private RoomMapper roomMapper;
 
     public Boolean createRoom(Room room) {
@@ -42,10 +39,7 @@ public class RoomService {
     }
 
     public Boolean updateStatusById(String roomId, Integer status) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("roomId", roomId);
-        params.put("roomStatus", status);
-        return roomMapper.updateStatusById(params) != 0;
+        return true;
     }
 
     public Room getRoomByRoomId(String roomId) {
@@ -67,8 +61,11 @@ public class RoomService {
         programmeDTO.setProgrammeId(programme.getProgrammeId());
         programmeDTO.setProgramList(new ArrayList<>());
         for(Program program : programme.getProgramList()){
-            ProgramDTO programDTO = new ProgramDTO();
             Song song = songService.getSongById(program.getSongId());
+            if(song == null){
+                continue;
+            }
+            ProgramDTO programDTO = new ProgramDTO();
             programDTO.setSong(song);
             programDTO.setRecommendations(program.getRecommendations());
             programmeDTO.getProgramList().add(programDTO);
@@ -76,12 +73,24 @@ public class RoomService {
         return programmeDTO;
     }
 
+    public List<RoomDTO> getHotRooms(){
+        List<RoomDTO> result = new ArrayList<>();
+        return result;
+    }
+
+    public void updateHotRooms(){
+
+    }
+
+    public Thread playStatusThread(Integer currentTime, Integer duration){
+        return new Thread();
+    }
+
     public PlayStatus getPlayStatusByRoomId(String roomId) {
-        return playStatusRepository.getPlayStatusByPlayStatusId(roomId);
+        return new PlayStatus();
     }
 
-    public void updatePlayStatus(PlayStatus playStatus) {
-        playStatusRepository.save(playStatus);
-    }
+    public void updatePlayStatus(String roomId, PlayStatus playStatus) {
 
+    }
 }

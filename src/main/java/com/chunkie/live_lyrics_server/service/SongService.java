@@ -1,6 +1,7 @@
 package com.chunkie.live_lyrics_server.service;
 
-import com.chunkie.live_lyrics_server.dto.SongDTO;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.chunkie.live_lyrics_server.dto.LyricDTO;
 import com.chunkie.live_lyrics_server.entity.Song;
 import com.chunkie.live_lyrics_server.mapper.SongMapper;
 import org.jaudiotagger.audio.AudioFile;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -26,25 +28,49 @@ public class SongService {
     @Resource
     private S3Service s3Service;
 
-
-    public String getAlbumCoverById(String songId) {
-        return s3Service.getFile("/resources/images/" + songId);
-    }
-
-    public Song getSongById(String songId) {
-        return songMapper.getSongById(songId);
-    }
+    private final String ALBUM_IMAGE_PREFIX = "resources/images/album/";
+    private final String LRC_PREFIX = "resources/lyric/";
+    private final String AUDIO_PREFIX = "resources/audio/";
 
     public Boolean uploadSong(Song song) {
         return songMapper.addSong(song) != 0;
     }
 
-    public Boolean uploadAudio(MultipartFile audio) {
-        return s3Service.uploadFile("/resources/audio/" + audio.getOriginalFilename(), audio);
+    public Boolean uploadAlbumCover(MultipartFile image) {
+        return s3Service.uploadFile(ALBUM_IMAGE_PREFIX + image.getOriginalFilename(), image);
     }
 
-    public Boolean uploadLyric(MultipartFile lyric) {
-        return s3Service.uploadFile("/resources/lyric/" + lyric.getOriginalFilename(), lyric);
+    public Boolean uploadAudio(MultipartFile audio) {
+        return s3Service.uploadFile(AUDIO_PREFIX + audio.getOriginalFilename(), audio);
+    }
+
+    public Boolean uploadLyric(List<MultipartFile> lyric) {
+        for (MultipartFile file : lyric) {
+            String filename = file.getOriginalFilename();
+            filename = filename.substring(0, filename.lastIndexOf("."));
+            String id = filename.substring(filename.lastIndexOf("_") + 1);
+            if (!s3Service.uploadFile(LRC_PREFIX + id + "/" + file.getOriginalFilename(), file))
+                return false;
+        }
+        return true;
+    }
+
+    public String getAlbumCoverById(String songId) {
+        String id = songId.substring(songId.lastIndexOf("_") + 1);
+        return s3Service.getFile(ALBUM_IMAGE_PREFIX + "album_" + id);
+    }
+
+    public String getAudioById(String songId) {
+        String id = songId.substring(songId.lastIndexOf("_") + 1);
+        return s3Service.getFile(AUDIO_PREFIX + "audio_" + id);
+    }
+
+    public List<LyricDTO> getLyricsById(String songId) {
+        return s3Service.getLyricsById(LRC_PREFIX + songId.substring(songId.indexOf("_") + 1) + "/");
+    }
+
+    public Song getSongById(String songId) {
+        return songMapper.getSongById(songId);
     }
 
     private long getAudioDuration(MultipartFile file) {

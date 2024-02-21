@@ -26,8 +26,7 @@ public class WebSocketController {
     @SendTo("/topic/playStatus/{roomId}")
     public PlayStatus playStatus(@Payload String message, @DestinationVariable String roomId) {
         PlayStatus playStatus = gson.fromJson(message, PlayStatus.class);
-        playStatus.setPlayStatusId("playStatus_" + roomId);
-        roomService.updatePlayStatus(playStatus);
+        roomService.updatePlayStatus(roomId, playStatus);
         return playStatus;
     }
 

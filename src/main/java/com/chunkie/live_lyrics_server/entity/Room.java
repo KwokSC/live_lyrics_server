@@ -9,8 +9,6 @@ public class Room {
 
     private String roomTitle;
 
-    private Boolean roomStatus;
-
     private String roomOwner;
 
 }

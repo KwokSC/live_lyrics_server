@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ProgramService {
@@ -27,12 +28,22 @@ public class ProgramService {
     @Resource
     private ProgrammeRepository programmeRepository;
 
-    public Programme addProgramByRoomId(String roomId, Program program){
-        Programme programme = programmeRepository.findByProgrammeId(roomId);
-        if (programme !=null){
+    public Boolean addProgramByRoomId(String roomId, Program program) {
+        Programme programme = programmeRepository.findByProgrammeId("programme_" + roomId);
+        if (programme != null) {
             programme.getProgramList().add(program);
-            return programmeRepository.save(programme);
+            programmeRepository.save(programme);
+            return true;
         }
-        return null;
+        return false;
+    }
+
+    public Boolean deleteProgramById(String roomId, String songId) {
+        Programme programme = programmeRepository.findByProgrammeId("programme_" + roomId);
+        if (programme != null) {
+            programme.getProgramList().stream().filter(program -> !program.getSongId().equals(songId)).collect(Collectors.toList());
+            return true;
+        }
+        return false;
     }
 }

@@ -5,12 +5,11 @@
         <id column="room_id" jdbcType="VARCHAR" property="roomId"/>
         <result column="room_title" jdbcType="VARCHAR" property="roomTitle"/>
         <result column="room_owner" jdbcType="VARCHAR" property="roomOwner"/>
-        <result column="room_status" jdbcType="INTEGER" property="roomStatus"/>
     </resultMap>
 
     <insert id="createRoom" parameterType="com.chunkie.live_lyrics_server.entity.Room">
-        INSERT INTO room_info(room_id, room_owner, room_title, room_status)
-        VALUES (#{roomId}, #{roomOwner}, #{roomTitle}, #{roomStatus})
+        INSERT INTO room_info(room_id, room_owner, room_title)
+        VALUES (#{roomId}, #{roomOwner}, #{roomTitle})
     </insert>
 
     <update id="updateRoomById" parameterType="com.chunkie.live_lyrics_server.entity.Room">
@@ -18,12 +17,6 @@
         <set>
             <if test="roomTitle != null">room_title = #{roomTitle},</if>
         </set>
-        WHERE room_id = #{roomId}
-    </update>
-
-    <update id="updateStatusById" parameterType="java.util.Map">
-        UPDATE room_info
-        SET room_status = #{roomStatus}
         WHERE room_id = #{roomId}
     </update>
 
