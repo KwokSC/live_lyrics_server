@@ -23,7 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor()).addPathPatterns("/api/**", "/app/playStatus/**");
+        registry.addInterceptor(authInterceptor()).addPathPatterns("/**");
     }
 
     @Override

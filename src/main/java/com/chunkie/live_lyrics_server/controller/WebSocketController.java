@@ -1,13 +1,14 @@
 package com.chunkie.live_lyrics_server.controller;
 
 
-import com.chunkie.live_lyrics_server.entity.PlayStatus;
+import com.chunkie.live_lyrics_server.common.MessageObject;
+import com.chunkie.live_lyrics_server.entity.response.SubscribeResponse;
+import com.chunkie.live_lyrics_server.exception.NoTypeMessageException;
+import com.chunkie.live_lyrics_server.service.LiveService;
 import com.chunkie.live_lyrics_server.service.RoomService;
-import com.google.gson.Gson;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import com.chunkie.live_lyrics_server.service.WebsocketService;
+import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,18 +21,44 @@ public class WebSocketController {
     private RoomService roomService;
 
     @Resource
-    private Gson gson;
+    private LiveService liveService;
 
-    @MessageMapping("/playStatus/{roomId}")
-    @SendTo("/topic/playStatus/{roomId}")
-    public PlayStatus playStatus(@Payload String message, @DestinationVariable String roomId) {
-        PlayStatus playStatus = gson.fromJson(message, PlayStatus.class);
-        roomService.updatePlayStatus(roomId, playStatus);
-        return playStatus;
+    @Resource
+    private WebsocketService websocketService;
+
+    @MessageMapping("/{roomId}/status.update")
+    @SendTo("/topic/{roomId}/public")
+    public MessageObject updateStatus(@Payload String message, @DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
+        // TODO: Handle message logic.
+        String messageType = accessor.getFirstNativeHeader("Type");
+        if (messageType == null) throw new NoTypeMessageException();
+        return websocketService.handleStatusMessage(message, messageType, roomId);
     }
 
-    @SubscribeMapping("/playStatus/{roomId}")
-    public PlayStatus getCurrentStatus(@DestinationVariable String roomId) {
-        return roomService.getPlayStatusByRoomId("playStatus_" + roomId);
+    @MessageMapping("/{roomId}/user.enter")
+    @SendTo("/topic/{roomId}/public")
+    public MessageObject userEnter(@DestinationVariable String roomId){
+        return websocketService.userEnter(roomId);
     }
+
+    @MessageMapping("/{roomId}/user.enter")
+    @SendTo("/topic/{roomId}/public")
+    public MessageObject userExit(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
+        String userId = accessor.getFirstNativeHeader("UserId");
+        if (userId == null) {
+            userId = accessor.getSessionId();
+        }
+        return websocketService.userExit(roomId, userId);
+    }
+
+    @SubscribeMapping("/{roomId}/public")
+    public SubscribeResponse subscribeRoom(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
+        // TODO: Handle subscribe event.
+        String userId = accessor.getFirstNativeHeader("UserId");
+        if (userId == null) {
+            userId = accessor.getSessionId();
+        }
+        return liveService.subscribeRoom(roomId, userId);
+    }
+
 }

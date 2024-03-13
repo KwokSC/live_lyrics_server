@@ -14,6 +14,6 @@ public class Song {
 
     private String songAlbum;
 
-    private Long songDuration;
+    private Integer songDuration;
 
 }

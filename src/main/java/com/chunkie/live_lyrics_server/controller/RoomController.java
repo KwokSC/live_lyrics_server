@@ -2,8 +2,11 @@ package com.chunkie.live_lyrics_server.controller;
 
 import com.chunkie.live_lyrics_server.annotation.LoginRequired;
 import com.chunkie.live_lyrics_server.common.ResponseObject;
+import com.chunkie.live_lyrics_server.entity.PlayerStatus;
 import com.chunkie.live_lyrics_server.dto.ProgrammeDTO;
+import com.chunkie.live_lyrics_server.entity.RoomStatus;
 import com.chunkie.live_lyrics_server.entity.Room;
+import com.chunkie.live_lyrics_server.service.LiveService;
 import com.chunkie.live_lyrics_server.service.RoomService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +23,11 @@ public class RoomController {
     @Resource
     private RoomService roomService;
 
-    @RequestMapping("/getHotRoom")
-    public ResponseObject getHotRoom(){
+    @Resource
+    private LiveService liveService;
+
+    @RequestMapping("/getHotRooms")
+    public ResponseObject getHotRooms() {
         return new ResponseObject();
     }
 
@@ -45,8 +51,8 @@ public class RoomController {
         return ResponseObject.success(programme, "Find the programme for the room.");
     }
 
-    @LoginRequired
     @RequestMapping("/getRoomByUserId")
+    @LoginRequired
     public ResponseObject getRoomByUserId(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         Room room = roomService.getRoomByUserId(token);
@@ -54,7 +60,26 @@ public class RoomController {
     }
 
     @RequestMapping("/getPlayStatusById")
-    public ResponseObject getPlayStatusById(@RequestParam String roomId){
-        return ResponseObject.success(roomService.getPlayStatusByRoomId("playStatus_"+roomId), "Room " + roomId + " play status found.");
+    public ResponseObject getPlayStatusById(@RequestParam String roomId) {
+        PlayerStatus playStatus = liveService.getPlayerStatusByRoomId(roomId);
+        return playStatus != null ? ResponseObject.success(playStatus, "Room " + roomId + " play status found.") : ResponseObject.fail(null, "Room is not online.");
+    }
+
+    @RequestMapping("/getRoomStatusById")
+    public ResponseObject getRoomStatusById(@RequestParam String roomId){
+        RoomStatus roomStatus = liveService.getLiveStatusByRoomId(roomId);
+        return roomStatus != null ? ResponseObject.success(roomStatus, "Room " + roomId + " play status found.") : ResponseObject.fail(null, "Room is not online.");
+    }
+
+    @RequestMapping("/startLive")
+    @LoginRequired
+    public ResponseObject startLive(@RequestParam String roomId) {
+        return liveService.startLive(roomId) ? ResponseObject.success(null, "Room " + roomId + " start live.") : ResponseObject.fail(null, "Fail to start live.");
+    }
+
+    @RequestMapping("/endLive")
+    public ResponseObject endLive(@RequestParam String roomId) {
+        liveService.endLive(roomId);
+        return ResponseObject.success(null, "Room " + roomId + " end live.");
     }
 }

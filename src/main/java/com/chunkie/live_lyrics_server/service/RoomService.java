@@ -2,7 +2,7 @@ package com.chunkie.live_lyrics_server.service;
 
 import com.chunkie.live_lyrics_server.dto.ProgramDTO;
 import com.chunkie.live_lyrics_server.dto.ProgrammeDTO;
-import com.chunkie.live_lyrics_server.dto.RoomDTO;
+import com.chunkie.live_lyrics_server.entity.RoomStatus;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.mapper.RoomMapper;
@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RoomService {
@@ -36,10 +34,6 @@ public class RoomService {
 
     public Boolean updateRoomById(Room room) {
         return roomMapper.updateRoomById(room) != 0;
-    }
-
-    public Boolean updateStatusById(String roomId, Integer status) {
-        return true;
     }
 
     public Room getRoomByRoomId(String roomId) {
@@ -73,8 +67,8 @@ public class RoomService {
         return programmeDTO;
     }
 
-    public List<RoomDTO> getHotRooms(){
-        List<RoomDTO> result = new ArrayList<>();
+    public List<RoomStatus> getHotRooms(){
+        List<RoomStatus> result = new ArrayList<>();
         return result;
     }
 
@@ -82,15 +76,4 @@ public class RoomService {
 
     }
 
-    public Thread playStatusThread(Integer currentTime, Integer duration){
-        return new Thread();
-    }
-
-    public PlayStatus getPlayStatusByRoomId(String roomId) {
-        return new PlayStatus();
-    }
-
-    public void updatePlayStatus(String roomId, PlayStatus playStatus) {
-
-    }
 }

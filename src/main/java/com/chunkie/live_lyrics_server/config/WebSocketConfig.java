@@ -1,6 +1,7 @@
 package com.chunkie.live_lyrics_server.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
@@ -23,5 +24,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setUserDestinationPrefix("/user");
     }
 
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        // TODO: Inbound politics needed.
+    }
 
+    @Override
+    public void configureClientOutboundChannel(ChannelRegistration registration) {
+        // TODO: Outbound politics needed.
+    }
 }

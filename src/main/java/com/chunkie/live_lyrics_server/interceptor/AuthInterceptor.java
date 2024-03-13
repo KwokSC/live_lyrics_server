@@ -3,8 +3,7 @@ package com.chunkie.live_lyrics_server.interceptor;
 import com.chunkie.live_lyrics_server.annotation.LoginRequired;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.service.AuthService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.HandlerMethod;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
-@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
@@ -21,7 +19,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (!(handler instanceof HandlerMethod)) return true;
-        System.out.println("Auth Interceptor called.");
+
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         if (method.isAnnotationPresent(LoginRequired.class)) {
