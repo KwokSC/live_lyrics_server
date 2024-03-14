@@ -2,10 +2,7 @@ package com.chunkie.live_lyrics_server.controller;
 
 
 import com.chunkie.live_lyrics_server.common.MessageObject;
-import com.chunkie.live_lyrics_server.entity.response.SubscribeResponse;
 import com.chunkie.live_lyrics_server.exception.NoTypeMessageException;
-import com.chunkie.live_lyrics_server.service.LiveService;
-import com.chunkie.live_lyrics_server.service.RoomService;
 import com.chunkie.live_lyrics_server.service.WebsocketService;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -16,12 +13,6 @@ import javax.annotation.Resource;
 
 @RestController
 public class WebSocketController {
-
-    @Resource
-    private RoomService roomService;
-
-    @Resource
-    private LiveService liveService;
 
     @Resource
     private WebsocketService websocketService;
@@ -52,13 +43,13 @@ public class WebSocketController {
     }
 
     @SubscribeMapping("/{roomId}/public")
-    public SubscribeResponse subscribeRoom(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
+    public MessageObject subscribeRoom(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
         // TODO: Handle subscribe event.
         String userId = accessor.getFirstNativeHeader("UserId");
         if (userId == null) {
             userId = accessor.getSessionId();
         }
-        return liveService.subscribeRoom(roomId, userId);
+        return websocketService.subscribeRoom(roomId, userId);
     }
 
 }

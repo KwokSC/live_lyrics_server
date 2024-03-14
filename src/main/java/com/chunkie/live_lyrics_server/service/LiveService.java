@@ -29,16 +29,9 @@ public class LiveService {
     @Resource
     private UserService userService;
 
-    @Resource
-    private AuthService authService;
-
-    private final ConcurrentHashMap<String, LiveStatus> liveStatusList;
+    private final ConcurrentHashMap<String, LiveStatus> liveStatusList = new ConcurrentHashMap<>();
 
     private static final Logger logger = LoggerFactory.getLogger(LiveService.class);
-
-    public LiveService() {
-        this.liveStatusList = new ConcurrentHashMap<>();
-    }
 
     public PlayerStatus getPlayerStatusByRoomId(String roomId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
@@ -54,13 +47,15 @@ public class LiveService {
 
     public RoomStatus getLiveStatusByRoomId(String roomId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
+        RoomStatus roomStatus = new RoomStatus();
         if (liveStatus != null) {
-            RoomStatus roomStatus = new RoomStatus();
             roomStatus.setIsOnline(true);
             roomStatus.setUsers(liveStatus.getUserList());
-            return roomStatus;
+        }else{
+            roomStatus.setIsOnline(false);
+            roomStatus.setUsers(null);
         }
-        return null;
+        return roomStatus;
     }
 
     public void updatePlayerStatusByRoomId(String roomId, PlayerStatus playerStatus) {
@@ -118,12 +113,12 @@ public class LiveService {
         return response;
     }
 
-    public void unsubscribeRoom(String roomId, String userId){
+    public void unsubscribeRoom(String roomId, String userId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
             List<UserDTO> users = liveStatus.getUserList();
-            for (UserDTO user : users){
-                if (user.getUserAccount() == userId){
+            for (UserDTO user : users) {
+                if (user.getUserAccount() == userId) {
                     users.remove(user);
                     break;
                 }

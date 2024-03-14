@@ -37,6 +37,8 @@ public interface Constants {
         String ROOM = "ROOM";
         // CHAT: message for user chatting in the room.
         String CHAT = "CHAT";
+
+        String SUBSCRIBE = "SUBSCRIBE";
         String USER_ENTER = "USER ENTER";
         String USER_EXIT = "USER EXIT";
     }

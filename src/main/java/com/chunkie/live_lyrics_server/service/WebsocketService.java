@@ -22,6 +22,9 @@ public class WebsocketService {
     @Resource
     private LiveService liveService;
 
+    @Resource
+    private ChatService chatService;
+
     private static final Logger logger = LoggerFactory.getLogger(WebsocketService.class);
 
     public MessageObject handleStatusMessage(String message, String messageType, String roomId) {
@@ -44,6 +47,13 @@ public class WebsocketService {
         return messageObject;
     }
 
+    public MessageObject subscribeRoom(String roomId, String userId){
+        MessageObject messageObject = new MessageObject();
+        messageObject.setType(SUBSCRIBE);
+        messageObject.setData(liveService.subscribeRoom(roomId, userId));
+        return messageObject;
+    }
+
     public MessageObject userEnter(String roomId){
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_ENTER);
@@ -63,6 +73,7 @@ public class WebsocketService {
         MessageObject messageObject = new MessageObject();
         ChatMessage chatMessage = gson.fromJson(message, ChatMessage.class);
         logger.debug("This message is chat type." + "Content:\n" + chatMessage.toString());
+        chatService.handleNewMessage(roomId, chatMessage);
         messageObject.setType(CHAT);
         messageObject.setData(chatMessage);
         return messageObject;
