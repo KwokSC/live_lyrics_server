@@ -67,7 +67,7 @@ public class RoomController {
 
     @RequestMapping("/getRoomStatusById")
     public ResponseObject getRoomStatusById(@RequestParam String roomId){
-        RoomStatus roomStatus = liveService.getLiveStatusByRoomId(roomId);
+        RoomStatus roomStatus = liveService.getRoomStatusByRoomId(roomId);
         return roomStatus != null ? ResponseObject.success(roomStatus, "Room " + roomId + " play status found.") : ResponseObject.fail(null, "Room is not online.");
     }
 

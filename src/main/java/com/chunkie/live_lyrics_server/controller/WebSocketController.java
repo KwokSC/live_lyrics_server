@@ -7,11 +7,11 @@ import com.chunkie.live_lyrics_server.service.WebsocketService;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import javax.annotation.Resource;
 
-@RestController
+@Controller
 public class WebSocketController {
 
     @Resource
@@ -20,7 +20,6 @@ public class WebSocketController {
     @MessageMapping("/{roomId}/status.update")
     @SendTo("/topic/{roomId}/public")
     public MessageObject updateStatus(@Payload String message, @DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
-        // TODO: Handle message logic.
         String messageType = accessor.getFirstNativeHeader("Type");
         if (messageType == null) throw new NoTypeMessageException();
         return websocketService.handleStatusMessage(message, messageType, roomId);
@@ -32,7 +31,7 @@ public class WebSocketController {
         return websocketService.userEnter(roomId);
     }
 
-    @MessageMapping("/{roomId}/user.enter")
+    @MessageMapping("/{roomId}/user.exit")
     @SendTo("/topic/{roomId}/public")
     public MessageObject userExit(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
         String userId = accessor.getFirstNativeHeader("UserId");
@@ -44,11 +43,7 @@ public class WebSocketController {
 
     @SubscribeMapping("/{roomId}/public")
     public MessageObject subscribeRoom(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
-        // TODO: Handle subscribe event.
         String userId = accessor.getFirstNativeHeader("UserId");
-        if (userId == null) {
-            userId = accessor.getSessionId();
-        }
         return websocketService.subscribeRoom(roomId, userId);
     }
 

@@ -1,6 +1,5 @@
 package com.chunkie.live_lyrics_server.service;
 
-import com.chunkie.live_lyrics_server.common.MessageObject;
 import com.chunkie.live_lyrics_server.entity.PlayerStatus;
 import com.chunkie.live_lyrics_server.entity.RoomStatus;
 import com.chunkie.live_lyrics_server.dto.UserDTO;
@@ -14,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class LiveService {
@@ -45,13 +45,13 @@ public class LiveService {
         return null;
     }
 
-    public RoomStatus getLiveStatusByRoomId(String roomId) {
+    public RoomStatus getRoomStatusByRoomId(String roomId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         RoomStatus roomStatus = new RoomStatus();
         if (liveStatus != null) {
             roomStatus.setIsOnline(true);
-            roomStatus.setUsers(liveStatus.getUserList());
-        }else{
+            roomStatus.setUsers(new ArrayList<>(liveStatus.getUserList().values()));
+        } else {
             roomStatus.setIsOnline(false);
             roomStatus.setUsers(null);
         }
@@ -104,11 +104,11 @@ public class LiveService {
             UserDTO userDTO = generateUserDTOById(userId);
             userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(userId) ? UserDTO.UserType.HOST : UserDTO.UserType.AUDIENCE);
             logger.info(userDTO.toString() + " enter the room_" + roomId);
-            liveStatus.getUserList().add(userDTO);
+            liveStatus.getUserList().put(userId, userDTO);
             logger.info(liveStatus.toString());
         }
         SubscribeResponse response = new SubscribeResponse();
-        response.setRoomStatus(getLiveStatusByRoomId(roomId));
+        response.setRoomStatus(getRoomStatusByRoomId(roomId));
         response.setPlayerStatus(getPlayerStatusByRoomId(roomId));
         return response;
     }
@@ -116,13 +116,7 @@ public class LiveService {
     public void unsubscribeRoom(String roomId, String userId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
-            List<UserDTO> users = liveStatus.getUserList();
-            for (UserDTO user : users) {
-                if (user.getUserAccount() == userId) {
-                    users.remove(user);
-                    break;
-                }
-            }
+            liveStatus.getUserList().remove(userId);
             logger.info(userId + " exit the room_" + roomId);
             logger.info(liveStatus.toString());
         }
@@ -133,7 +127,7 @@ public class LiveService {
         User user = userService.getUserById(id);
         if (user == null) {
             userDTO.setUserAccount(id);
-            userDTO.setUserName("audience_" + id);
+            userDTO.setUserName("guest_" + id);
         } else {
             userDTO.setUserAccount(user.getUserAccount());
             userDTO.setUserName(user.getUserName());

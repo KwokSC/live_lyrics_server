@@ -5,9 +5,7 @@ import com.chunkie.live_lyrics_server.util.MusicTimerTask;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -17,14 +15,14 @@ public class LiveStatus {
 
     private Song currentSong;
 
-    private List<UserDTO> userList;
+    private Map<String, UserDTO> userList;
 
     private Timer timer;
 
     private MusicTimerTask task;
 
     public LiveStatus(){
-        this.userList = new ArrayList<>();
+        this.userList = new HashMap<>();
         this.timer = new Timer();
     }
 
