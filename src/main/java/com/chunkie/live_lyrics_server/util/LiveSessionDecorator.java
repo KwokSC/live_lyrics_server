@@ -12,11 +12,8 @@ public class LiveSessionDecorator extends WebSocketHandlerDecorator {
 
     private final WebsocketService websocketService;
 
-    private static final Logger logger = LoggerFactory.getLogger(LiveSessionDecorator.class);
-
     public LiveSessionDecorator(WebSocketHandler delegate, WebsocketService websocketService) {
         super(delegate);
-        logger.info(String.valueOf(websocketService == null));
         this.websocketService = websocketService;
     }
 

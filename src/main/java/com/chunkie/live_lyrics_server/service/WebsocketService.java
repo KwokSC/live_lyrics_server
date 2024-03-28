@@ -124,14 +124,6 @@ public class WebsocketService {
         sessionPool.put(sessionId, session);
         logger.info("Add a session. All connected sessions: " + sessionPool.toString());
     }
-//
-//    public void activateSession(String userId, String sessionId) {
-//        if (userSessions.get(userId) != null) {
-//            deactivateSession(userSessions.get(userId));
-//        }
-//        userSessions.put(userId, sessionId);
-//        logger.info("Active sessions: " + userSessions.toString());
-//    }
 
     public void deactivateSession(String sessionId) {
         WebSocketSession session = sessionPool.get(sessionId);
