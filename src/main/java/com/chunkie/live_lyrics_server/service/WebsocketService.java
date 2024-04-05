@@ -71,31 +71,32 @@ public class WebsocketService {
      * @Author chunkie
      * @Date 3/19/24
      */
-    public MessageObject subscribeRoom(String roomId, String userId) {
+    public MessageObject subscribeRoom(String roomId) {
         MessageObject messageObject = new MessageObject();
-        messageObject.setType(SUBSCRIBE);
-        messageObject.setData(liveService.subscribeRoom(roomId, userId));
+        messageObject.setType(PLAYER);
+        messageObject.setData(liveService.getPlayerStatusByRoomId(roomId));
         return messageObject;
     }
 
     /**
      * @Description The function will be called right after a new user subscribe a specific room topic. (Please see
-     * {@link #subscribeRoom(String, String)}) It will return a updated user list.
+     * {@link #subscribeRoom(String}) It will return a updated user list.
      * @Param [roomId]
      * @Return com.chunkie.live_lyrics_server.common.MessageObject
      * @Author chunkie
      * @Date 3/19/24
      */
-    public MessageObject userEnter(String roomId) {
+    public MessageObject userEnter(String roomId, String userId) {
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_ENTER);
+        liveService.userEnter(roomId, userId);
         messageObject.setData(liveService.getRoomStatusByRoomId(roomId));
         return messageObject;
     }
 
     /**
      * @Description The function will be called each time a user exit the room. It will call
-     * {@link LiveService#unsubscribeRoom(String, String)} first and then return an encapsulated
+     * {@link LiveService#userExit(String, String)} first and then return an encapsulated
      * MessageObject including the updated user list.
      * @Param [roomId, userId]
      * @Return com.chunkie.live_lyrics_server.common.MessageObject
@@ -105,7 +106,7 @@ public class WebsocketService {
     public MessageObject userExit(String roomId, String userId) {
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_EXIT);
-        liveService.unsubscribeRoom(roomId, userId);
+        liveService.userExit(roomId, userId);
         messageObject.setData(liveService.getRoomStatusByRoomId(roomId));
         return messageObject;
     }

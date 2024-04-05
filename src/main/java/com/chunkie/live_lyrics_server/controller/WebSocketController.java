@@ -27,24 +27,21 @@ public class WebSocketController {
 
     @MessageMapping("/{roomId}/user.enter")
     @SendTo("/topic/{roomId}/public")
-    public MessageObject userEnter(@DestinationVariable String roomId){
-        return websocketService.userEnter(roomId);
+    public MessageObject userEnter(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
+        String userId = accessor.getFirstNativeHeader("UserId");
+        return websocketService.userEnter(roomId, userId);
     }
 
     @MessageMapping("/{roomId}/user.exit")
     @SendTo("/topic/{roomId}/public")
     public MessageObject userExit(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
         String userId = accessor.getFirstNativeHeader("UserId");
-        if (userId == null) {
-            userId = accessor.getSessionId();
-        }
         return websocketService.userExit(roomId, userId);
     }
 
     @SubscribeMapping("/{roomId}/public")
-    public MessageObject subscribeRoom(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor) {
-        String userId = accessor.getFirstNativeHeader("UserId");
-        return websocketService.subscribeRoom(roomId, userId);
+    public MessageObject subscribeRoom(@DestinationVariable String roomId) {
+        return websocketService.subscribeRoom(roomId);
     }
 
 }

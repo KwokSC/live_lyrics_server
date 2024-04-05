@@ -1,8 +1,6 @@
 package com.chunkie.live_lyrics_server.util;
 
 import com.chunkie.live_lyrics_server.service.WebsocketService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;

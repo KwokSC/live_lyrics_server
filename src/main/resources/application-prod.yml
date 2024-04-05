@@ -5,8 +5,7 @@ spring:
     password: 19980518
   data:
     mongodb:
-      host: localhost
-      port: 27017
+      uri: mongodb+srv://chunkie0518:Gsc-980518@live-lyrics-mongodb.zmz6vzs.mongodb.net/
       database: live_lyrics
   redis:
     host: localhost
