@@ -12,6 +12,7 @@ spring:
 server:
   tomcat:
     max-http-form-post-size: 10MB
+  port: 8042
 
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
