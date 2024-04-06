@@ -1,15 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/live_lyrics?serverTimezone=UTC
-    username: root
-    password: 19980518
+    url: awseb-e-sfyqpij8ah-stack-awsebrdsdatabase-dqgu118fivvr.c3c8ig6y4i0d.ap-southeast-2.rds.amazonaws.com:3306/ebdb
+    username: chunkie0518
+    password: Gsc-980518
   data:
     mongodb:
       uri: mongodb+srv://chunkie0518:Gsc-980518@live-lyrics-mongodb.zmz6vzs.mongodb.net/
       database: live_lyrics
   redis:
-    host: localhost
-    port: 6379
+    host: redis-13003.c296.ap-southeast-2-1.ec2.cloud.redislabs.com
+    port: 13003
     timeout: 3000
     lettuce:
       pool:
@@ -17,3 +17,5 @@ spring:
         max-idle: 8
         min-idle: 2
         max-wait: -1
+    username: default
+    password: Gsc-980518
