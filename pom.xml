@@ -13,6 +13,26 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>live_lyrics_server</name>
     <description>Demo project for Spring Boot</description>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <active-profiles>dev</active-profiles>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <active-profiles>prod</active-profiles>
+            </properties>
+        </profile>
+    </profiles>
     <properties>
         <java.version>1.8</java.version>
     </properties>
