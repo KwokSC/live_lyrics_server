@@ -19,17 +19,19 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn -B package -DskipTests -Pprod --file pom.xml
-      - name: Upload JAR
+      - name: Create ZIP artifact
+        run: zip -r artifact.zip .platform target/live_lyrics_server-0.0.1-SNAPSHOT.jar
+      - name: Upload ZIP
         uses: actions/upload-artifact@v4
         with:
           name: artifact
-          path: target/live_lyrics_server-0.0.1-SNAPSHOT.jar
+          path: artifact.zip
   deploy:
     needs: build
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Download JAR
+      - name: Download ZIP
         uses: actions/download-artifact@v4
         with:
           name: artifact
