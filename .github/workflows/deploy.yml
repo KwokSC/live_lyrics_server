@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '8'
+          distribution: 'oracle'
       - name: Set Spring profile to prod
         run: |
           sed -i "s/\(spring:\n  profiles:\n    active:\) .*/\1 prod/" src/main/resources/application.yml
