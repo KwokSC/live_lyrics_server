@@ -31,9 +31,11 @@ public class RoomController {
         return new ResponseObject();
     }
 
+    @LoginRequired
     @RequestMapping("/createRoom")
-    public ResponseObject createRoom(@RequestBody Room room) {
-        if (roomService.createRoom(room)) {
+    public ResponseObject createRoom(@RequestBody Room room, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (roomService.createRoom(room, token)) {
             return ResponseObject.success(null, "Successfully create a room.");
         }
         return ResponseObject.fail(null, "Fail to create a room.");

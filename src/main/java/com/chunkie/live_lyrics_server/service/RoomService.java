@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RoomService {
@@ -28,7 +29,13 @@ public class RoomService {
     @Resource
     private RoomMapper roomMapper;
 
-    public Boolean createRoom(Room room) {
+    public Boolean createRoom(Room room, String token) {
+        String userId = authService.getUserByToken(token);
+        if (userId == null){
+            return false;
+        }
+        room.setRoomId(generateRoomId());
+        room.setRoomOwner(userId);
         return roomMapper.createRoom(room) != 0;
     }
 
@@ -50,10 +57,14 @@ public class RoomService {
 
     public ProgrammeDTO getProgrammeByRoomId(String roomId) {
         Programme programme = programmeRepository.findByProgrammeId(roomId);
-        if (programme == null) return null;
         ProgrammeDTO programmeDTO = new ProgrammeDTO();
+        if (programme == null) {
+            Programme newProgramme = new Programme();
+            newProgramme.setProgrammeId("programme_" + roomId);
+            programmeRepository.save(newProgramme);
+            return null;
+        }
         programmeDTO.setProgrammeId(programme.getProgrammeId());
-        programmeDTO.setProgramList(new ArrayList<>());
         for(Program program : programme.getProgramList()){
             Song song = songService.getSongById(program.getSongId());
             if(song == null){
@@ -74,6 +85,11 @@ public class RoomService {
 
     public void updateHotRooms(){
 
+    }
+
+    private String generateRoomId() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.substring(uuid.length() - 6);
     }
 
 }

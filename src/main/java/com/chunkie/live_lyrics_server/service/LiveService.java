@@ -100,7 +100,7 @@ public class LiveService {
             UserDTO userDTO = generateUserDTOById(userId);
             userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(userId) ? HOST : UserDTO.UserType.AUDIENCE);
             liveStatus.getUserList().put(userId, userDTO);
-            logger.info(userDTO.toString() + " enter the room_" + roomId);
+            logger.info("{} enter the room_{}", userDTO, roomId);
             logger.info(liveStatus.toString());
         }
     }
@@ -109,7 +109,7 @@ public class LiveService {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
             liveStatus.getUserList().remove(userId);
-            logger.info(userId + " exit the room_" + roomId);
+            logger.info("{} exit the room_{}", userId, roomId);
             logger.info(liveStatus.toString());
         }
     }

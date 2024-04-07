@@ -19,7 +19,7 @@ public class HotRoomScheduler {
 
     @Scheduled(fixedRate = 3600000) // 每小时执行一次，单位为毫秒
     public void refreshHotRooms() {
-        logger.info("Current time is: " + LocalTime.now() + " Hot room list is refreshing.");
+        logger.info("Current time is: {} Hot room list is refreshing.", LocalTime.now());
         RoomService.updateHotRooms();
     }
 

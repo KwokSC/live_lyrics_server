@@ -47,14 +47,14 @@ public class WebsocketService {
         switch (messageType) {
             case PLAYER:
                 PlayerStatus playerStatus = gson.fromJson(message, PlayerStatus.class);
-                logger.info("This message is player type. " + "Content:\n" + playerStatus.toString());
+                logger.info("This message is player type. Content:\n{}", playerStatus.toString());
                 liveService.updatePlayerStatusByRoomId(roomId, playerStatus);
                 messageObject.setType(PLAYER);
                 messageObject.setData(playerStatus);
                 break;
             case ROOM:
                 RoomStatus roomStatus = gson.fromJson(message, RoomStatus.class);
-                logger.debug("This message is room type." + "Content:\n" + roomStatus.toString());
+                logger.info("This message is room type.Content:\n{}", roomStatus.toString());
                 messageObject.setType(ROOM);
                 messageObject.setData(roomStatus);
                 break;
@@ -114,7 +114,7 @@ public class WebsocketService {
     public MessageObject handleChatMessage(String message, String roomId) {
         MessageObject messageObject = new MessageObject();
         ChatMessage chatMessage = gson.fromJson(message, ChatMessage.class);
-        logger.debug("This message is chat type." + "Content:\n" + chatMessage.toString());
+        logger.info("This message is chat type.Content:\n{}", chatMessage.toString());
         chatService.handleNewMessage(roomId, chatMessage);
         messageObject.setType(CHAT);
         messageObject.setData(chatMessage);
@@ -123,7 +123,7 @@ public class WebsocketService {
 
     public void activateSession(String sessionId, WebSocketSession session) {
         sessionPool.put(sessionId, session);
-        logger.info("Add a session. All connected sessions: " + sessionPool.toString());
+        logger.info("Add a session. All connected sessions: {}", sessionPool);
     }
 
     public void deactivateSession(String sessionId) {
@@ -131,10 +131,10 @@ public class WebsocketService {
         try {
             if (session != null) session.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         sessionPool.remove(sessionId);
-        logger.info("Deactivate session: " + sessionId);
+        logger.info("Deactivate session: {}", sessionId);
     }
 
 }

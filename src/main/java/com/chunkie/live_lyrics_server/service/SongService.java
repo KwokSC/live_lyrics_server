@@ -1,6 +1,6 @@
 package com.chunkie.live_lyrics_server.service;
 
-import com.amazonaws.services.s3.model.ObjectListing;
+
 import com.chunkie.live_lyrics_server.dto.LyricDTO;
 import com.chunkie.live_lyrics_server.entity.Song;
 import com.chunkie.live_lyrics_server.mapper.SongMapper;
@@ -10,6 +10,8 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +33,8 @@ public class SongService {
     private final String ALBUM_IMAGE_PREFIX = "resources/images/album/";
     private final String LRC_PREFIX = "resources/lyric/";
     private final String AUDIO_PREFIX = "resources/audio/";
+
+    private final static Logger logger = LoggerFactory.getLogger(SongService.class);
 
     public Boolean uploadSong(Song song) {
         return songMapper.addSong(song) != 0;
@@ -80,7 +84,7 @@ public class SongService {
             AudioFile audioFile = AudioFileIO.read(convertedFile);
             return audioFile.getAudioHeader().getTrackLength();
         } catch (CannotReadException | IOException | TagException | InvalidAudioFrameException | ReadOnlyFileException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return -1; // Indicates failure to get the audio duration
     }
