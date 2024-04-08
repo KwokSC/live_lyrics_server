@@ -2,14 +2,6 @@ package com.chunkie.live_lyrics_server.common;
 
 public interface Constants {
 
-    interface Msg {
-
-    }
-
-    interface Code{
-
-    }
-
     interface AWS{
         String BUCKET = "live-lyrics-bucket";
     }
