@@ -1,6 +1,5 @@
 package com.chunkie.live_lyrics_server.config;
 
-import com.chunkie.live_lyrics_server.common.Constants;
 import com.squareup.square.Environment;
 import com.squareup.square.SquareClient;
 import com.squareup.square.authentication.BearerAuthModel;

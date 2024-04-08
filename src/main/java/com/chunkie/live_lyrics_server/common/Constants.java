@@ -1,23 +1,13 @@
 package com.chunkie.live_lyrics_server.common;
 
-/**
- * @Description:
- * @ClassName: Constants
- * @Author: SichengGuo
- * @Date: 2021/12/14 17:22
- * @Version: 1.0
- */
 public interface Constants {
 
     interface Msg {
-        String SUCCESS = "Successful request";
-        String FAIL = "Fail request";
-        String NEW = "New User";
+
     }
 
     interface Code{
-        Integer NORMAL = 200;
-        Integer EXCEPTION = 500;
+
     }
 
     interface AWS{
@@ -38,7 +28,6 @@ public interface Constants {
         // CHAT: message for user chatting in the room.
         String CHAT = "CHAT";
 
-        String SUBSCRIBE = "SUBSCRIBE";
         String USER_ENTER = "USER ENTER";
         String USER_EXIT = "USER EXIT";
     }
