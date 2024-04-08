@@ -24,10 +24,6 @@ public interface Constants {
         String BUCKET = "live-lyrics-bucket";
     }
 
-    interface SQUARE{
-        String TOKEN = "EAAAl6069mjeaMaICWaPziRJfZ_grIOIPp0mpBNbab236GmUisW1EuO_6Wk3oNlv";
-    }
-
     interface Auth{
         long EXP = 30;
     }
