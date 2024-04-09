@@ -1,14 +1,17 @@
 package com.chunkie.live_lyrics_server.service;
 
+import com.chunkie.live_lyrics_server.dto.LiveStatusDTO;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.dto.UserDTO;
 import com.chunkie.live_lyrics_server.util.MusicTimerTask;
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.chunkie.live_lyrics_server.dto.UserDTO.UserType.*;
@@ -28,6 +31,21 @@ public class LiveService {
     private final ConcurrentHashMap<String, LiveStatus> liveStatusList = new ConcurrentHashMap<>();
 
     private static final Logger logger = LoggerFactory.getLogger(LiveService.class);
+
+    public List<LiveStatusDTO> getAllLiveStatuses() {
+        List<LiveStatus> liveStatuses = new ArrayList<>(liveStatusList.values());
+        List<LiveStatusDTO> result = new ArrayList<>();
+        for (LiveStatus liveStatus : liveStatuses) {
+            LiveStatusDTO liveStatusDTO = new LiveStatusDTO();
+            liveStatusDTO.setRoomId(liveStatus.getRoom().getRoomId());
+            liveStatusDTO.setRoomTitle(liveStatus.getRoom().getRoomTitle());
+            liveStatusDTO.setHostInfo(userService.getProfileById(liveStatus.getRoom().getRoomOwner()));
+            liveStatusDTO.setAudienceAmount(liveStatus.getUserList().size());
+            liveStatusDTO.setSong(liveStatus.getCurrentSong());
+            result.add(liveStatusDTO);
+        }
+        return result;
+    }
 
     public PlayerStatus getPlayerStatusByRoomId(String roomId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
@@ -77,7 +95,7 @@ public class LiveService {
             liveStatusList.put(roomId, liveStatus);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -125,5 +143,9 @@ public class LiveService {
             userDTO.setUserName(user.getUserName());
         }
         return userDTO;
+    }
+
+    public void updateHotRooms(){
+
     }
 }

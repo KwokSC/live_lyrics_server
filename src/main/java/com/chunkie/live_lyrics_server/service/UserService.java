@@ -1,6 +1,7 @@
 package com.chunkie.live_lyrics_server.service;
 
 import com.chunkie.live_lyrics_server.dto.UserDTO;
+import com.chunkie.live_lyrics_server.entity.Profile;
 import com.chunkie.live_lyrics_server.entity.User;
 import com.chunkie.live_lyrics_server.entity.UserInfo;
 import com.chunkie.live_lyrics_server.entity.response.LoginResponse;
@@ -20,6 +21,18 @@ public class UserService {
 
     public User getUserById(String id){
         return userMapper.getUserById(id);
+    }
+
+    public Profile getProfileById(String id){
+        User user = userMapper.getUserById(id);
+        Profile profile = new Profile();
+        if(user != null){
+            profile.setUserAccount(user.getUserAccount());
+            profile.setUserName(user.getUserName());
+            profile.setGender(String.valueOf(user.getGender()));
+            profile.setSummary(user.getSummary());
+        }
+        return profile;
     }
 
     public LoginResponse authenticateUser(User user){

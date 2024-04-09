@@ -5,6 +5,9 @@
         <id column="user_account" jdbcType="VARCHAR" property="userAccount" />
         <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
         <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="gender" jdbcType="VARCHAR"
+                typeHandler="com.chunkie.live_lyrics_server.handler.GeneralEnumTypeHandler" property="gender"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
     </resultMap>
 
     <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">

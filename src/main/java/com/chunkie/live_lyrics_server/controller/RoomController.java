@@ -73,6 +73,11 @@ public class RoomController {
         return roomStatus != null ? ResponseObject.success(roomStatus, "Room " + roomId + " play status found.") : ResponseObject.fail(null, "Room is not online.");
     }
 
+    @RequestMapping("/getAllOnlineRooms")
+    public ResponseObject getAllOnlineRooms() {
+        return ResponseObject.success(liveService.getAllLiveStatuses(), "All rooms online.");
+    }
+
     @RequestMapping("/startLive")
     @LoginRequired
     public ResponseObject startLive(@RequestParam String roomId) {

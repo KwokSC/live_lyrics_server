@@ -1,8 +1,10 @@
 package com.chunkie.live_lyrics_server.util;
 
+import com.chunkie.live_lyrics_server.service.LiveService;
 import com.chunkie.live_lyrics_server.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +17,12 @@ public class HotRoomScheduler {
     private static final Logger logger = LoggerFactory.getLogger(HotRoomScheduler.class);
 
     @Resource
-    private RoomService RoomService;
+    private LiveService liveService;
 
     @Scheduled(fixedRate = 3600000) // 每小时执行一次，单位为毫秒
     public void refreshHotRooms() {
         logger.info("Current time is: {} Hot room list is refreshing.", LocalTime.now());
-        RoomService.updateHotRooms();
+        liveService.updateHotRooms();
     }
 
 }

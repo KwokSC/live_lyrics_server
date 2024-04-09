@@ -1,5 +1,6 @@
 package com.chunkie.live_lyrics_server.service;
 
+import com.chunkie.live_lyrics_server.dto.LiveStatusDTO;
 import com.chunkie.live_lyrics_server.dto.ProgramDTO;
 import com.chunkie.live_lyrics_server.dto.ProgrammeDTO;
 import com.chunkie.live_lyrics_server.entity.RoomStatus;
@@ -7,6 +8,7 @@ import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.mapper.RoomMapper;
 import com.chunkie.live_lyrics_server.repo.ProgrammeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +24,9 @@ public class RoomService {
 
     @Resource
     private SongService songService;
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private ProgrammeRepository programmeRepository;
@@ -76,15 +81,6 @@ public class RoomService {
             programmeDTO.getProgramList().add(programDTO);
         }
         return programmeDTO;
-    }
-
-    public List<RoomStatus> getHotRooms(){
-        List<RoomStatus> result = new ArrayList<>();
-        return result;
-    }
-
-    public void updateHotRooms(){
-
     }
 
     private String generateRoomId() {
