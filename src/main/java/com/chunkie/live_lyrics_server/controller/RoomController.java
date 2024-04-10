@@ -54,7 +54,6 @@ public class RoomController {
     }
 
     @RequestMapping("/getRoomByUserAccount")
-    @LoginRequired
     public ResponseObject getRoomByUserAccount(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         Room room = roomService.getRoomByUserAccount(token);
