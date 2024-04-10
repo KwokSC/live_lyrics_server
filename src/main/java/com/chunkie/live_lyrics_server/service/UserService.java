@@ -5,6 +5,8 @@ import com.chunkie.live_lyrics_server.entity.User;
 import com.chunkie.live_lyrics_server.entity.UserInfo;
 import com.chunkie.live_lyrics_server.entity.response.LoginResponse;
 import com.chunkie.live_lyrics_server.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Service
 public class UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     @Resource
     private UserMapper userMapper;
 
@@ -22,7 +25,7 @@ public class UserService {
     @Resource
     private S3Service s3Service;
 
-    private final String ALBUM_IMAGE_PREFIX = "resources/images/profile/";
+    private final String PROFILE_IMAGE_PREFIX = "resources/images/profile/";
 
     public void register(User user) {
         user.setUserId(generateUserId());
@@ -45,7 +48,7 @@ public class UserService {
             profile.setUserName(user.getUserName());
             profile.setGender(String.valueOf(user.getGender()));
             profile.setSummary(user.getSummary());
-            profile.setProfileImg(s3Service.getFile(ALBUM_IMAGE_PREFIX + user.getUserId()));
+            profile.setProfileImg(s3Service.getFile(PROFILE_IMAGE_PREFIX + user.getUserId()));
         }
         return profile;
     }
