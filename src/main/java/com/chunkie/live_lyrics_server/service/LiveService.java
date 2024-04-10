@@ -4,7 +4,6 @@ import com.chunkie.live_lyrics_server.dto.LiveStatusDTO;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.dto.UserDTO;
 import com.chunkie.live_lyrics_server.util.MusicTimerTask;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class LiveService {
             LiveStatusDTO liveStatusDTO = new LiveStatusDTO();
             liveStatusDTO.setRoomId(liveStatus.getRoom().getRoomId());
             liveStatusDTO.setRoomTitle(liveStatus.getRoom().getRoomTitle());
-            liveStatusDTO.setHostInfo(userService.getProfileById(liveStatus.getRoom().getRoomOwner()));
+            liveStatusDTO.setHostInfo(userService.getProfileByAccount(liveStatus.getRoom().getRoomOwner()));
             liveStatusDTO.setAudienceAmount(liveStatus.getUserList().size());
             liveStatusDTO.setSong(liveStatus.getCurrentSong());
             result.add(liveStatusDTO);
@@ -67,7 +66,7 @@ public class LiveService {
             roomStatus.setUsers(new ArrayList<>(liveStatus.getUserList().values()));
         } else {
             roomStatus.setIsOnline(false);
-            roomStatus.setUsers(null);
+            roomStatus.setUsers(new ArrayList<>());
         }
         return roomStatus;
     }
@@ -112,12 +111,12 @@ public class LiveService {
         logger.info(liveStatusList.toString());
     }
 
-    public void userEnter(String roomId, String userId) {
+    public void userEnter(String roomId, String account) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
-            UserDTO userDTO = generateUserDTOById(userId);
-            userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(userId) ? HOST : UserDTO.UserType.AUDIENCE);
-            liveStatus.getUserList().put(userId, userDTO);
+            UserDTO userDTO = generateUserDTOByAccount(account);
+            userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(account) ? HOST : UserDTO.UserType.AUDIENCE);
+            liveStatus.getUserList().put(account, userDTO);
             logger.info("{} enter the room_{}", userDTO, roomId);
             logger.info(liveStatus.toString());
         }
@@ -132,12 +131,12 @@ public class LiveService {
         }
     }
 
-    private UserDTO generateUserDTOById(String id) {
+    private UserDTO generateUserDTOByAccount(String account) {
         UserDTO userDTO = new UserDTO();
-        User user = userService.getUserById(id);
+        User user = userService.getUserByAccount(account);
         if (user == null) {
-            userDTO.setUserAccount(id);
-            userDTO.setUserName("guest_" + id);
+            userDTO.setUserAccount(account);
+            userDTO.setUserName("guest_" + account);
         } else {
             userDTO.setUserAccount(user.getUserAccount());
             userDTO.setUserName(user.getUserName());

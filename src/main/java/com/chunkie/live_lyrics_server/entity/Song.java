@@ -1,6 +1,5 @@
 package com.chunkie.live_lyrics_server.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data

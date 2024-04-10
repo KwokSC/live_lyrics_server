@@ -11,5 +11,4 @@ public class DonationService {
     @Resource
     private SquareClient squareClient;
 
-
 }

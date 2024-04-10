@@ -12,5 +12,5 @@ public interface RoomMapper {
 
     Room getRoomByRoomId(String roomId);
 
-    Room getRoomByUserId(String userId);
+    Room getRoomByUserAccount(String userId);
 }

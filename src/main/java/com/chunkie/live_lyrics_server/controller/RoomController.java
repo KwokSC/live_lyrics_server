@@ -53,11 +53,11 @@ public class RoomController {
         return ResponseObject.success(programme, "Find the programme for the room.");
     }
 
-    @RequestMapping("/getRoomByUserId")
+    @RequestMapping("/getRoomByUserAccount")
     @LoginRequired
-    public ResponseObject getRoomByUserId(HttpServletRequest request) {
+    public ResponseObject getRoomByUserAccount(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        Room room = roomService.getRoomByUserId(token);
+        Room room = roomService.getRoomByUserAccount(token);
         return room != null ? ResponseObject.success(room, "Find the room.") : ResponseObject.fail(null, "Room not found.");
     }
 

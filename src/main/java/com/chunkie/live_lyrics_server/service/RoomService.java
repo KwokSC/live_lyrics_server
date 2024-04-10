@@ -1,19 +1,14 @@
 package com.chunkie.live_lyrics_server.service;
 
-import com.chunkie.live_lyrics_server.dto.LiveStatusDTO;
 import com.chunkie.live_lyrics_server.dto.ProgramDTO;
 import com.chunkie.live_lyrics_server.dto.ProgrammeDTO;
-import com.chunkie.live_lyrics_server.entity.RoomStatus;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.mapper.RoomMapper;
 import com.chunkie.live_lyrics_server.repo.ProgrammeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -52,10 +47,10 @@ public class RoomService {
         return roomMapper.getRoomByRoomId(roomId);
     }
 
-    public Room getRoomByUserId(String token) {
+    public Room getRoomByUserAccount(String token) {
         String userId = authService.getUserByToken(token);
         if (userId != null) {
-            return roomMapper.getRoomByUserId(userId);
+            return roomMapper.getRoomByUserAccount(userId);
         }
         throw new UnauthorizedException();
     }

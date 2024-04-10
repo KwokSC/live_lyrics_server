@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.chunkie.live_lyrics_server.common.Constants;
 import com.chunkie.live_lyrics_server.dto.LyricDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class S3Service {
     @Value(Constants.AWS.BUCKET)
     private String bucketName;
 
+    private static final Logger logger = LoggerFactory.getLogger(S3Service.class);
+
     public boolean uploadFile(String key, MultipartFile file) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -37,7 +41,7 @@ public class S3Service {
             PutObjectResult result = amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
             return result.getMetadata() != null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return false;
         }
     }
@@ -51,10 +55,8 @@ public class S3Service {
             S3Object object = amazonS3.getObject(bucketName, key);
             return getS3Url(object);
         } catch (AmazonS3Exception e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND.value())
-                return null;
-            else
-                throw e;
+            logger.error(e.getMessage(), e);
+            return null;
         }
     }
 

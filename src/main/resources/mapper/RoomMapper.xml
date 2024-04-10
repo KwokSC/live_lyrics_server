@@ -26,9 +26,9 @@
         WHERE room_id = #{roomId}
     </select>
 
-    <select id="getRoomByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="getRoomByUserAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT *
         FROM room_info
-        WHERE room_owner = #{userId}
+        WHERE room_owner = #{userAccount}
     </select>
 </mapper>

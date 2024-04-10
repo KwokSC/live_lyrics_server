@@ -39,6 +39,12 @@ public class WebSocketController {
         return websocketService.userExit(roomId, userId);
     }
 
+    @MessageMapping("/{roomId}/chat")
+    @SendTo("/topic/{roomId}/public")
+    public MessageObject chat(@DestinationVariable String roomId, @Payload String message){
+        return websocketService.handleChatMessage(message, roomId);
+    }
+
     @SubscribeMapping("/{roomId}/public")
     public MessageObject subscribeRoom(@DestinationVariable String roomId) {
         return websocketService.subscribeRoom(roomId);
