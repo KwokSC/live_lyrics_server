@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @RequestMapping("/")
+    @RequestMapping("/health")
     public ResponseObject healthCheck(){
         return ResponseObject.success(null, "Health Check OK");
     }
