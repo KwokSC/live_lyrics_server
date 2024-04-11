@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://awseb-e-sfyqpij8ah-stack-awsebrdsdatabase-dqgu118fivvr.c3c8ig6y4i0d.ap-southeast-2.rds.amazonaws.com:3306/ebdb
+    url: jdbc:mysql://awseb-e-sfyqpij8ah-stack-awsebrdsdatabase-afhwqp59szm2.c3c8ig6y4i0d.ap-southeast-2.rds.amazonaws.com:3306/ebdb
     username: chunkie0518
     password: Gsc-980518
   data:
