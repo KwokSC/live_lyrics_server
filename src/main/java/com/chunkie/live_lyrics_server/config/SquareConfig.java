@@ -10,10 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 @Configuration
 public class SquareConfig {
 
