@@ -9,4 +9,8 @@ public interface SongMapper {
     int addSong(Song song);
 
     Song getSongById(String id);
+
+    int updateSongById(Song song);
+
+    int deleteSongById(String id);
 }

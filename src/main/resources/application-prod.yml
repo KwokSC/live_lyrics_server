@@ -19,3 +19,6 @@ spring:
         max-wait: -1
     username: default
     password: Gsc-980518
+
+square:
+  accessToken: EAAAlxDYB-mK3Xfonw14LqY5jmWBKOmBzGRr8pMEh1bsSu98Q0tA1xaN9MKN2MmH

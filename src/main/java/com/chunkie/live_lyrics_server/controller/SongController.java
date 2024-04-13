@@ -36,24 +36,35 @@ public class SongController {
     }
 
     @RequestMapping("/song/getAudioById")
-    public ResponseObject getAudioById(@RequestParam String songId){
+    public ResponseObject getAudioById(@RequestParam String songId) {
         return ResponseObject.success(songService.getAudioById(songId), "Find audio of the song.");
     }
 
-    @RequestMapping("/song/uploadSongInfo")
+    @RequestMapping("/song/submit")
+    public ResponseObject uploadSong(@RequestParam("roomId") String roomId,
+                                     @RequestParam("song") String song,
+                                     @RequestParam("program") String program,
+                                     @RequestParam("audio") MultipartFile audio,
+                                     @RequestParam("album") MultipartFile image,
+                                     @RequestParam("lyric") List<MultipartFile> lyrics
+    ) {
+        return songService.submit(roomId, song, program, audio, image, lyrics) ? ResponseObject.success(null, "Upload" +
+                " " +
+                "successfully.") :
+                ResponseObject.fail(null, "Upload unsuccessfully.");
+    }
+
+    @RequestMapping("/song/uploadSong")
     public ResponseObject uploadSong(@RequestBody Song song) {
-        return songService.uploadSong(song) ? ResponseObject.success(null, "Upload successfully.") : ResponseObject.fail(null, "Upload unsuccessfully.");
+        return songService.uploadSong(song) ? ResponseObject.success(null, "Upload successfully.") :
+                ResponseObject.fail(null, "Upload unsuccessfully.");
     }
 
-    @RequestMapping("/song/uploadAudio")
-    public ResponseObject uploadAudio(@RequestParam MultipartFile audio) {
-        return songService.uploadAudio(audio) ? ResponseObject.success(null, "Upload successfully.") : ResponseObject.fail(null, "Fail to upload audio.");
-    }
-
-    @RequestMapping("/api/song/uploadAlbumCover")
+    @RequestMapping("/song/uploadAlbumCover")
     @LoginRequired
-    public ResponseObject uploadAlbumCover(@RequestParam MultipartFile image) {
-        return songService.uploadAlbumCover(image) ? ResponseObject.success(null, "Upload successfully.") : ResponseObject.fail(null, "Fail to upload album cover.");
+    public ResponseObject uploadAlbumCover(@RequestParam MultipartFile album) {
+        return songService.uploadAlbumCover(album) ? ResponseObject.success(null, "Upload successfully.") :
+                ResponseObject.fail(null, "Fail to upload album cover.");
     }
 
     @RequestMapping("/song/uploadLyric")

@@ -25,7 +25,7 @@ public class UserService {
     @Resource
     private S3Service s3Service;
 
-    private final String PROFILE_IMAGE_PREFIX = "resources/images/profile/";
+    private final String AVATAR_IMAGE_PREFIX = "resources/images/profile/*/avatar";
 
     public void register(User user) {
         user.setUserId(generateUserId());
@@ -48,7 +48,7 @@ public class UserService {
             profile.setUserName(user.getUserName());
             profile.setGender(String.valueOf(user.getGender()));
             profile.setSummary(user.getSummary());
-            profile.setProfileImg(s3Service.getFile(PROFILE_IMAGE_PREFIX + user.getUserId()));
+            profile.setProfileImg(s3Service.getFile(AVATAR_IMAGE_PREFIX.replace("*", user.getUserId())));
         }
         return profile;
     }

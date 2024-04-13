@@ -49,7 +49,7 @@ public class RoomController {
 
     @RequestMapping("/getProgrammeById")
     public ResponseObject getProgrammeById(@RequestParam String roomId) {
-        ProgrammeDTO programme = roomService.getProgrammeByRoomId("programme_" + roomId);
+        ProgrammeDTO programme = roomService.getProgrammeByRoomId(roomId);
         return ResponseObject.success(programme, "Find the programme for the room.");
     }
 

@@ -97,7 +97,7 @@ public class S3Service {
 
     private String getExtension(MultipartFile file) {
         String originalName = file.getOriginalFilename();
-        String extension = null;
+        String extension = "";
         if (originalName != null) {
             int dotIndex = originalName.lastIndexOf(".");
             if (dotIndex > 0) {
@@ -112,7 +112,7 @@ public class S3Service {
         try (InputStream inputStream = s3Object.getObjectContent()) {
             return IOUtils.toString(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

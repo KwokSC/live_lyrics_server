@@ -9,6 +9,7 @@ import com.chunkie.live_lyrics_server.repo.ProgrammeRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -59,8 +60,8 @@ public class RoomService {
         Programme programme = programmeRepository.findByProgrammeId(roomId);
         ProgrammeDTO programmeDTO = new ProgrammeDTO();
         if (programme == null) {
-            Programme newProgramme = new Programme();
-            newProgramme.setProgrammeId("programme_" + roomId);
+            Programme newProgramme = new Programme(roomId, new ArrayList<>());
+            newProgramme.setProgrammeId(roomId);
             programmeRepository.save(newProgramme);
             return null;
         }

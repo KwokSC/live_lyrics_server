@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,21 +19,25 @@ public class SquareConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(SquareConfig.class);
 
+    @Value("${square.accessToken}")
+    private String accessToken;
+
     @Bean
-    public SquareClient squareClient(){
-
-        InputStream inputStream = SquareConfig.class.getResourceAsStream("/config.properties");
-        Properties prop = new Properties();
-
-        try {
-            prop.load(inputStream);
-        } catch (IOException e) {
-            logger.error("Error reading properties file");
-        }
-
+    @Profile("dev")
+    public SquareClient squareClientDev(){
+        logger.info("SQUARE: {}", accessToken);
         return new SquareClient.Builder()
                 .environment(Environment.SANDBOX)
-                .bearerAuthCredentials(new BearerAuthModel.Builder(prop.getProperty("SQUARE_ACCESS_TOKEN")).build())
+                .bearerAuthCredentials(new BearerAuthModel.Builder(accessToken).build())
+                .build();
+    }
+
+    @Bean
+    @Profile("prod")
+    public SquareClient squareClientProd(){
+        return new SquareClient.Builder()
+                .environment(Environment.PRODUCTION)
+                .bearerAuthCredentials(new BearerAuthModel.Builder(accessToken).build())
                 .build();
     }
 }
