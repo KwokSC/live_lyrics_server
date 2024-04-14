@@ -63,6 +63,15 @@ public class SongService {
         }
     }
 
+    public void deleteSong(String roomId, String songId) {
+        String id = songId.replace("song_", "");
+        s3Service.deleteFile(AUDIO_PREFIX + "audio_" + id);
+        s3Service.deleteFile(ALBUM_IMAGE_PREFIX + "album_" + id);
+        s3Service.deleteFile(LRC_PREFIX + id);
+        songMapper.deleteSongById(songId);
+        programService.deleteProgramById(roomId, songId);
+    }
+
     public boolean uploadAudio(MultipartFile audio) {
         return s3Service.uploadFile(AUDIO_PREFIX + audio.getOriginalFilename(), audio);
     }

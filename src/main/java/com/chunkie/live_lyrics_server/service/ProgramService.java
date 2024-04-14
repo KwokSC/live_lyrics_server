@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +32,10 @@ public class ProgramService {
     public boolean deleteProgramById(String roomId, String songId) {
         Programme programme = programmeRepository.findByProgrammeId(roomId);
         if (programme != null) {
-            programme.getProgramList().stream().filter(program -> !program.getSongId().equals(songId)).collect(Collectors.toList());
+            List<Program> programList =
+                    programme.getProgramList().stream().filter(program -> !program.getSongId().equals(songId)).collect(Collectors.toList());
+            programme.setProgramList(programList);
+            programmeRepository.save(programme);
             return true;
         }
         return false;

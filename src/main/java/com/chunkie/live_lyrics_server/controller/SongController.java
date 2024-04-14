@@ -54,6 +54,12 @@ public class SongController {
                 ResponseObject.fail(null, "Upload unsuccessfully.");
     }
 
+    @RequestMapping("/song/deleteSong")
+    public ResponseObject deleteSong(@RequestParam String roomId, @RequestParam String songId) {
+        songService.deleteSong(roomId, songId);
+        return ResponseObject.success(null, "Delete song details.");
+    }
+
     @RequestMapping("/song/uploadSong")
     public ResponseObject uploadSong(@RequestBody Song song) {
         return songService.uploadSong(song) ? ResponseObject.success(null, "Upload successfully.") :
