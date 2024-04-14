@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerStatus {
 
-    private String currentSong;
+    private Song currentSong;
 
     private Integer currentTime;
 

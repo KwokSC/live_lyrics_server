@@ -22,9 +22,6 @@ public class LiveService {
     private RoomService roomService;
 
     @Resource
-    private SongService songService;
-
-    @Resource
     private UserService userService;
 
     private final ConcurrentHashMap<String, LiveStatus> liveStatusList = new ConcurrentHashMap<>();
@@ -50,7 +47,7 @@ public class LiveService {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         PlayerStatus playerStatus = new PlayerStatus();
         if (liveStatus != null) {
-            playerStatus.setCurrentSong(liveStatus.getCurrentSong() != null ? liveStatus.getCurrentSong().getSongId() : null);
+            playerStatus.setCurrentSong(liveStatus.getCurrentSong() != null ? liveStatus.getCurrentSong() : null);
             playerStatus.setIsPlaying(liveStatus.getTask() != null ? liveStatus.getTask().getPlaying() : false);
             playerStatus.setCurrentTime(liveStatus.getTask() != null ? liveStatus.getTask().getCurrentTime() : 0);
             return playerStatus;
@@ -74,13 +71,11 @@ public class LiveService {
     public void updatePlayerStatusByRoomId(String roomId, PlayerStatus playerStatus) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus == null) return;
-        if (liveStatus.getCurrentSong() == null || !liveStatus.getCurrentSong().getSongId().equals(playerStatus.getCurrentSong())) {
-            Song song = songService.getSongById(playerStatus.getCurrentSong());
-            liveStatus.setCurrentSong(song);
-            liveStatus.setTask(new MusicTimerTask());
-            liveStatus.getTask().setDuration(song.getSongDuration());
-            liveStatus.getTimer().schedule(liveStatus.getTask(), 0, 1000);
-        }
+        Song song = playerStatus.getCurrentSong();
+        liveStatus.setCurrentSong(song);
+        liveStatus.setTask(new MusicTimerTask());
+        liveStatus.getTask().setDuration(song.getSongDuration());
+        liveStatus.getTimer().schedule(liveStatus.getTask(), 0, 1000);
         liveStatus.getTask().setCurrentTime(playerStatus.getCurrentTime());
         liveStatus.getTask().setPlaying(playerStatus.getIsPlaying());
         logger.info(liveStatus.toString());
