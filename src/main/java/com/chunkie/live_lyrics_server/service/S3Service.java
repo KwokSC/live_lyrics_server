@@ -37,6 +37,7 @@ public class S3Service {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
+            logger.info(file.getContentType());
             key = key.replace(getExtension(file), "");
             PutObjectResult result = amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
             return result.getMetadata() != null;

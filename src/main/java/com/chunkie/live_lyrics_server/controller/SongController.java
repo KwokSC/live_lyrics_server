@@ -1,10 +1,9 @@
 package com.chunkie.live_lyrics_server.controller;
 
-import com.chunkie.live_lyrics_server.annotation.LoginRequired;
 import com.chunkie.live_lyrics_server.common.ResponseObject;
 import com.chunkie.live_lyrics_server.entity.Song;
 import com.chunkie.live_lyrics_server.service.SongService;
-import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,12 +40,12 @@ public class SongController {
     }
 
     @RequestMapping("/song/submit")
-    public ResponseObject uploadSong(@RequestParam("roomId") String roomId,
-                                     @RequestParam("song") String song,
-                                     @RequestParam("program") String program,
-                                     @RequestParam("audio") MultipartFile audio,
-                                     @RequestParam("album") MultipartFile image,
-                                     @RequestParam("lyric") List<MultipartFile> lyrics
+    public ResponseObject submit(@RequestParam("roomId") String roomId,
+                                 @RequestParam("song") String song,
+                                 @RequestParam("program") String program,
+                                 @RequestParam("audio") MultipartFile audio,
+                                 @RequestParam("album") @Nullable MultipartFile image,
+                                 @RequestParam("lyric") @Nullable List<MultipartFile> lyrics
     ) {
         return songService.submit(roomId, song, program, audio, image, lyrics) ? ResponseObject.success(null, "Upload" +
                 " " +
@@ -66,15 +65,20 @@ public class SongController {
                 ResponseObject.fail(null, "Upload unsuccessfully.");
     }
 
+    @RequestMapping("/song/uploadAudio")
+    public ResponseObject uploadAudio(@RequestParam(value = "audio") MultipartFile audio) {
+        return songService.uploadAudio(audio) ? ResponseObject.success(null, "Upload successfully.") :
+                ResponseObject.fail(null, "Upload unsuccessfully.");
+    }
+
     @RequestMapping("/song/uploadAlbumCover")
-    @LoginRequired
-    public ResponseObject uploadAlbumCover(@RequestParam MultipartFile album) {
+    public ResponseObject uploadAlbumCover(@RequestParam(value = "album") MultipartFile album) {
         return songService.uploadAlbumCover(album) ? ResponseObject.success(null, "Upload successfully.") :
                 ResponseObject.fail(null, "Fail to upload album cover.");
     }
 
     @RequestMapping("/song/uploadLyric")
-    public ResponseObject uploadLyric(@RequestParam List<MultipartFile> lyric) {
+    public ResponseObject uploadLyric(@RequestParam(value = "lyric") List<MultipartFile> lyric) {
         return songService.uploadLyric(lyric) ? ResponseObject.success(null, "Upload successfully.") : ResponseObject.fail(null, "Fail to upload lyric.");
     }
 }

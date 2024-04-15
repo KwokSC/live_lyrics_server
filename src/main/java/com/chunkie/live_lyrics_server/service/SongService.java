@@ -33,10 +33,6 @@ public class SongService {
 
     private final static Logger logger = LoggerFactory.getLogger(SongService.class);
 
-    public boolean uploadSong(Song song) {
-        return songMapper.addSong(song) != 0;
-    }
-
     public boolean submit(String roomId, String songJson, String programJson, MultipartFile audio, MultipartFile image,
                           List<MultipartFile> lyrics) {
         Gson gson = new Gson();
@@ -45,18 +41,25 @@ public class SongService {
         try {
             songMapper.addSong(song);
             programService.addProgramByRoomId(roomId, program);
-            uploadAudio(audio);
-            uploadAlbumCover(image);
-            uploadLyric(lyrics);
+            if (image != null) {
+                uploadAlbumCover(image);
+            }
+            if (lyrics != null) {
+                uploadLyric(lyrics);
+            }
             return true;
         } catch (Exception e) {
             logger.error(e.getMessage());
             s3Service.deleteFile(AUDIO_PREFIX + audio.getOriginalFilename());
-            s3Service.deleteFile(ALBUM_IMAGE_PREFIX + image.getOriginalFilename());
-            String filename = lyrics.get(0).getOriginalFilename();
-            assert filename != null;
-            String id = filename.substring(filename.lastIndexOf("_") + 1);
-            s3Service.deleteFile(LRC_PREFIX + id);
+            if(image!=null){
+                s3Service.deleteFile(ALBUM_IMAGE_PREFIX + image.getOriginalFilename());
+            }
+            if (lyrics != null) {
+                String filename = lyrics.get(0).getOriginalFilename();
+                assert filename != null;
+                String id = filename.substring(filename.lastIndexOf("_") + 1);
+                s3Service.deleteFile(LRC_PREFIX + id);
+            }
             songMapper.deleteSongById(song.getSongId());
             programService.deleteProgramById(roomId, program.getSongId());
             return false;
@@ -70,6 +73,10 @@ public class SongService {
         s3Service.deleteFile(LRC_PREFIX + id);
         songMapper.deleteSongById(songId);
         programService.deleteProgramById(roomId, songId);
+    }
+
+    public boolean uploadSong(Song song) {
+        return songMapper.addSong(song) != 0;
     }
 
     public boolean uploadAudio(MultipartFile audio) {

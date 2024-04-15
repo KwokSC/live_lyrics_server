@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Resource
     private UserMapper userMapper;
 
@@ -29,7 +29,6 @@ public class UserService {
 
     public void register(User user) {
         user.setUserId(generateUserId());
-
     }
 
     public User getUserById(String id){
@@ -38,6 +37,14 @@ public class UserService {
 
     public User getUserByAccount(String account){
         return userMapper.getUserByAccount(account);
+    }
+
+    public UserInfo getUserInfo(User user){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(user.getUserId());
+        userInfo.setUserName(user.getUserName());
+        userInfo.setUserAccount(user.getUserAccount());
+        return userInfo;
     }
 
     public Profile getProfileByAccount(String account){
