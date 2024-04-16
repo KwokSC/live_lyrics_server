@@ -32,7 +32,7 @@ public class LiveStatus {
         Integer currentTimeStr;
         String isPlayingStr;
         if (currentSong != null) {
-            songInfo = currentSong.getSongId() + " " + currentSong.getSongName();
+            songInfo = currentSong.getSongName();
         } else {
             songInfo = "No song is active.";
         }

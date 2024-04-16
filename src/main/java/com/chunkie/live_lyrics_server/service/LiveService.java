@@ -3,7 +3,6 @@ package com.chunkie.live_lyrics_server.service;
 import com.chunkie.live_lyrics_server.dto.LiveStatusDTO;
 import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.dto.UserDTO;
-import com.chunkie.live_lyrics_server.util.MusicTimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -76,7 +75,6 @@ public class LiveService {
         liveStatus.getTask().setDuration(song.getSongDuration());
         liveStatus.getTask().setCurrentTime(playerStatus.getCurrentTime());
         liveStatus.getTask().setIsPlaying(playerStatus.getIsPlaying());
-        logger.info(liveStatus.toString());
     }
 
     public Boolean startLive(String roomId) {
