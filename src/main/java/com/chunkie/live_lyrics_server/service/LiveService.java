@@ -48,7 +48,7 @@ public class LiveService {
         PlayerStatus playerStatus = new PlayerStatus();
         if (liveStatus != null) {
             playerStatus.setCurrentSong(liveStatus.getCurrentSong() != null ? liveStatus.getCurrentSong() : null);
-            playerStatus.setIsPlaying(liveStatus.getTask() != null ? liveStatus.getTask().getPlaying() : false);
+            playerStatus.setIsPlaying(liveStatus.getTask() != null ? liveStatus.getTask().getIsPlaying() : false);
             playerStatus.setCurrentTime(liveStatus.getTask() != null ? liveStatus.getTask().getCurrentTime() : 0);
             return playerStatus;
         }
@@ -73,11 +73,9 @@ public class LiveService {
         if (liveStatus == null) return;
         Song song = playerStatus.getCurrentSong();
         liveStatus.setCurrentSong(song);
-        liveStatus.setTask(new MusicTimerTask());
         liveStatus.getTask().setDuration(song.getSongDuration());
-        liveStatus.getTimer().schedule(liveStatus.getTask(), 0, 1000);
         liveStatus.getTask().setCurrentTime(playerStatus.getCurrentTime());
-        liveStatus.getTask().setPlaying(playerStatus.getIsPlaying());
+        liveStatus.getTask().setIsPlaying(playerStatus.getIsPlaying());
         logger.info(liveStatus.toString());
     }
 
@@ -86,6 +84,7 @@ public class LiveService {
             LiveStatus liveStatus = new LiveStatus();
             Room room = roomService.getRoomByRoomId(roomId);
             liveStatus.setRoom(room);
+            liveStatus.getTimer().schedule(liveStatus.getTask(), 0, 1000);
             liveStatusList.put(roomId, liveStatus);
             return true;
         } catch (Exception e) {

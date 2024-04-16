@@ -21,7 +21,6 @@ public class SquareConfig {
     @Bean
     @Profile("dev")
     public SquareClient squareClientDev(){
-        logger.info("SQUARE: {}", accessToken);
         return new SquareClient.Builder()
                 .environment(Environment.SANDBOX)
                 .bearerAuthCredentials(new BearerAuthModel.Builder(accessToken).build())

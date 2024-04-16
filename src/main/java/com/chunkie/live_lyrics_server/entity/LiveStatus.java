@@ -19,7 +19,7 @@ public class LiveStatus {
 
     private Timer timer;
 
-    private MusicTimerTask task;
+    private MusicTimerTask task = new MusicTimerTask();
 
     public LiveStatus(){
         this.userList = new HashMap<>();
@@ -41,7 +41,7 @@ public class LiveStatus {
             isPlayingStr = "Unavailable";
         } else {
             currentTimeStr = task.getCurrentTime();
-            isPlayingStr = task.getPlaying().toString();
+            isPlayingStr = task.getIsPlaying().toString();
         }
         return String.format("RoomStatus[song=%s, users=%s, currentTime=%d, isPlaying=%s]", songInfo, userList.toString(), currentTimeStr, isPlayingStr);
     }

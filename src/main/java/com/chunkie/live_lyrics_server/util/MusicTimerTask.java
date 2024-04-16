@@ -1,62 +1,37 @@
 package com.chunkie.live_lyrics_server.util;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.TimerTask;
 
+@Getter
+@Setter
 public class MusicTimerTask extends TimerTask {
 
-    public Integer getCurrentTime() {
-        return currentTime;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(MusicTimerTask.class);
 
-    public void setCurrentTime(Integer currentTime) {
-        this.currentTime = currentTime;
-    }
+    private Integer currentTime = 0;
 
-    public Integer getDuration() {
-        return duration;
-    }
+    private Integer duration = 0;
 
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public Boolean getPlaying() {
-        return isPlaying;
-    }
-
-    public void setPlaying(Boolean playing) {
-        isPlaying = playing;
-    }
-
-    public synchronized void pauseTimer() {
-        this.isPlaying = false;
-    }
-
-    public synchronized void resumeTimer() {
-        this.isPlaying = true;
-        notify();
-    }
-
-    private Integer currentTime;
-
-    private Integer duration;
-
-    private Boolean isPlaying;
+    private Boolean isPlaying = false;
 
     @Override
     public void run() {
-        if (isPlaying && currentTime <= duration) {
+        if (isPlaying && currentTime < duration) {
             currentTime++;
-        }
-        else if (currentTime > duration){
+        } else if (currentTime >= duration) {
             currentTime = duration;
-            pauseTimer();
+            this.setIsPlaying(false);
         }
     }
 
     @Override
     public boolean cancel() {
-        pauseTimer();
+        this.setIsPlaying(false);
         return super.cancel();
     }
 }
