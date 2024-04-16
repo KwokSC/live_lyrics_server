@@ -41,6 +41,7 @@ public class S3Service {
             key = key.replace(getExtension(file), "");
             PutObjectResult result = amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
             return result.getMetadata() != null;
+//            return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;
