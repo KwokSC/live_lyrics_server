@@ -46,9 +46,9 @@ public class LiveService {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         PlayerStatus playerStatus = new PlayerStatus();
         if (liveStatus != null) {
-            playerStatus.setCurrentSong(liveStatus.getCurrentSong() != null ? liveStatus.getCurrentSong() : null);
-            playerStatus.setIsPlaying(liveStatus.getTask() != null ? liveStatus.getTask().getIsPlaying() : false);
-            playerStatus.setCurrentTime(liveStatus.getTask() != null ? liveStatus.getTask().getCurrentTime() : 0);
+            playerStatus.setCurrentSong(liveStatus.getCurrentSong());
+            playerStatus.setIsPlaying(liveStatus.getTask().getIsPlaying());
+            playerStatus.setCurrentTime(liveStatus.getTask().getCurrentTime());
             return playerStatus;
         }
         return playerStatus;

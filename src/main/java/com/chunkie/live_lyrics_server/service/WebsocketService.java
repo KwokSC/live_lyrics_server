@@ -33,6 +33,8 @@ public class WebsocketService {
 
     private final Map<String, WebSocketSession> sessionPool = new ConcurrentHashMap<>();
 
+    private final Map<String, String> userSessionMap = new ConcurrentHashMap<>();
+
     private static final Logger logger = LoggerFactory.getLogger(WebsocketService.class);
 
     /**
@@ -47,14 +49,14 @@ public class WebsocketService {
         switch (messageType) {
             case PLAYER:
                 PlayerStatus playerStatus = gson.fromJson(message, PlayerStatus.class);
-                logger.info("This message is player type. Content:\n{}", playerStatus.toString());
+                logger.info("This message is {} type. Content:\n{}", PLAYER, playerStatus.toString());
                 liveService.updatePlayerStatusByRoomId(roomId, playerStatus);
                 messageObject.setType(PLAYER);
                 messageObject.setData(playerStatus);
                 break;
             case ROOM:
                 RoomStatus roomStatus = gson.fromJson(message, RoomStatus.class);
-                logger.info("This message is room type.Content:\n{}", roomStatus.toString());
+                logger.info("This message is {} type.Content:\n{}", ROOM, roomStatus.toString());
                 messageObject.setType(ROOM);
                 messageObject.setData(roomStatus);
                 break;
@@ -87,9 +89,9 @@ public class WebsocketService {
      * @Date 3/19/24
      */
     public MessageObject userEnter(String roomId, String userId) {
+        liveService.userEnter(roomId, userId);
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_ENTER);
-        liveService.userEnter(roomId, userId);
         messageObject.setData(liveService.getRoomStatusByRoomId(roomId));
         return messageObject;
     }
@@ -104,9 +106,9 @@ public class WebsocketService {
      * @Date 3/19/24
      */
     public MessageObject userExit(String roomId, String userId) {
+        liveService.userExit(roomId, userId);
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_EXIT);
-        liveService.userExit(roomId, userId);
         messageObject.setData(liveService.getRoomStatusByRoomId(roomId));
         return messageObject;
     }
