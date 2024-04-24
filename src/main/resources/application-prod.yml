@@ -21,4 +21,5 @@ spring:
     password: Gsc-980518
 
 square:
+  environment: production
   accessToken: EAAAlxDYB-mK3Xfonw14LqY5jmWBKOmBzGRr8pMEh1bsSu98Q0tA1xaN9MKN2MmH

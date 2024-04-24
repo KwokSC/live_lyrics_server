@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.chunkie.live_lyrics_server.dto.UserDTO.UserType.*;
+import static com.chunkie.live_lyrics_server.common.Constants.UserType.*;
 
 @Service
 public class LiveService {
@@ -100,27 +100,31 @@ public class LiveService {
             }
             liveStatusList.remove(roomId);
         }
-        logger.info(liveStatusList.toString());
+        logger.info("End live for roomId: {}", roomId);
     }
 
-    public void userEnter(String roomId, String account) {
+    public String userEnter(String roomId, String account) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
             UserDTO userDTO = generateUserDTOByAccount(account);
-            userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(account) ? HOST : UserDTO.UserType.AUDIENCE);
+            userDTO.setType(liveStatus.getRoom().getRoomOwner().equals(account) ? HOST : AUDIENCE);
             liveStatus.getUserList().put(account, userDTO);
             logger.info("{} enter the room_{}", userDTO, roomId);
             logger.info(liveStatus.toString());
+            return userDTO.getType();
         }
+        return null;
     }
 
-    public void userExit(String roomId, String userId) {
+    public String userExit(String roomId, String userId) {
         LiveStatus liveStatus = liveStatusList.get(roomId);
         if (liveStatus != null) {
+            UserDTO userDTO = liveStatus.getUserList().get(userId);
             liveStatus.getUserList().remove(userId);
             logger.info("{} exit the room_{}", userId, roomId);
-            logger.info(liveStatus.toString());
+            return userDTO.getType();
         }
+        return null;
     }
 
     private UserDTO generateUserDTOByAccount(String account) {

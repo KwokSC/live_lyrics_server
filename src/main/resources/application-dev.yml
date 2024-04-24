@@ -20,4 +20,5 @@ spring:
         max-wait: -1
 
 square:
+  environment: sandbox
   accessToken: EAAAl6069mjeaMaICWaPziRJfZ_grIOIPp0mpBNbab236GmUisW1EuO_6Wk3oNlv

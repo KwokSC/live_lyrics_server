@@ -15,9 +15,11 @@ import javax.annotation.Resource;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.chunkie.live_lyrics_server.common.Constants.MsgType.*;
+import static com.chunkie.live_lyrics_server.common.Constants.UserType.*;
 
 @Service
 public class WebsocketService {
@@ -88,8 +90,11 @@ public class WebsocketService {
      * @Author chunkie
      * @Date 3/19/24
      */
-    public MessageObject userEnter(String roomId, String userId) {
-        liveService.userEnter(roomId, userId);
+    public MessageObject userEnter(String roomId, String userId, String sessionId) {
+        if (Objects.equals(liveService.userEnter(roomId, userId), HOST)) {
+            userSessionMap.put(sessionId, roomId);
+            logger.info("Room {} entered session {}", roomId, sessionId);
+        }
         MessageObject messageObject = new MessageObject();
         messageObject.setType(USER_ENTER);
         messageObject.setData(liveService.getRoomStatusByRoomId(roomId));
@@ -131,6 +136,10 @@ public class WebsocketService {
     public void deactivateSession(String sessionId) {
         WebSocketSession session = sessionPool.get(sessionId);
         try {
+            if (userSessionMap.containsKey(sessionId)) {
+                liveService.endLive(userSessionMap.get(sessionId));
+                userSessionMap.remove(sessionId);
+            }
             if (session != null) session.close();
         } catch (IOException e) {
             logger.error(e.getMessage());

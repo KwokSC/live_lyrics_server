@@ -3,7 +3,6 @@ package com.chunkie.live_lyrics_server.service;
 import com.chunkie.live_lyrics_server.common.ResponseObject;
 import com.chunkie.live_lyrics_server.entity.request.PaymentRequest;
 import com.chunkie.live_lyrics_server.entity.response.PaymentResponse;
-import com.google.gson.JsonObject;
 import com.squareup.square.SquareClient;
 import com.squareup.square.api.PaymentsApi;
 import com.squareup.square.exceptions.ApiException;
@@ -14,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class TipService {
@@ -25,11 +22,15 @@ public class TipService {
 
     private final static Logger logger = LoggerFactory.getLogger(TipService.class);
 
-    public ResponseObject payment(PaymentRequest payload) {
-        CreatePaymentRequest request = new CreatePaymentRequest.Builder(payload.getSourceId(), payload.getIdempotencyKey())
-                .amountMoney(new Money.Builder().amount(Long.valueOf(payload.getAmountMoney().getAmount()))
-                        .currency(payload.getAmountMoney().getCurrency())
-                        .build())
+    public ResponseObject payment(PaymentRequest payload){
+        Money bodyAmountMoney = new Money.Builder().amount(Long.valueOf(payload.getAmountMoney().getAmount()))
+                .currency(payload.getAmountMoney().getCurrency())
+                .build();
+
+        CreatePaymentRequest request = new CreatePaymentRequest.Builder(
+                payload.getSourceId(),
+                payload.getIdempotencyKey(),
+                bodyAmountMoney)
                 .verificationToken(payload.getVerificationToken())
                 .locationId(payload.getLocationId())
                 .build();
@@ -43,20 +44,9 @@ public class TipService {
                     response.setPaymentStatus(payment.getStatus());
                     response.setReceiptUrl(payment.getReceiptUrl());
                     response.setOrderId(payment.getOrderId());
-                    return response;
+                    return new ResponseObject(response, 200, "Payment created");
                 }).exceptionally(exception -> null)
                 .join();
-//        try {
-//            CreatePaymentResponse result = paymentsApi.createPayment(request);
-//            Payment payment = result.getPayment();
-//            response.setPaymentId(payment.getId());
-//            response.setPaymentStatus(payment.getStatus());
-//            response.setReceiptUrl(payment.getReceiptUrl());
-//            response.setOrderId(payment.getOrderId());
-//            return ResponseObject.success(response, "Payment created successfully");
-//        } catch (ApiException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
         return ResponseObject.fail(null, "Payment failed");
     }
 

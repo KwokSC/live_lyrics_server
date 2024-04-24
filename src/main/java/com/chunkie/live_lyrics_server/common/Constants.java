@@ -24,4 +24,8 @@ public interface Constants {
         String USER_EXIT = "USER EXIT";
     }
 
+    interface UserType{
+        String HOST = "HOST";
+        String AUDIENCE = "AUDIENCE";
+    }
 }

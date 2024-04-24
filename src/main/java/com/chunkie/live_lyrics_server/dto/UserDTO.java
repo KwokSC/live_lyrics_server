@@ -5,15 +5,11 @@ import lombok.Data;
 @Data
 public class UserDTO {
 
-    private UserType type;
+    private String type;
 
     private String userAccount;
 
     private String userName;
-
-    public enum UserType{
-        HOST, AUDIENCE
-    }
 
     @Override
     public String toString(){

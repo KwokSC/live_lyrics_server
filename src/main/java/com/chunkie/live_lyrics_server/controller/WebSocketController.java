@@ -30,7 +30,7 @@ public class WebSocketController {
     public MessageObject userEnter(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
         String userId = accessor.getFirstNativeHeader("UserId");
         String sessionId = accessor.getSessionId();
-        return websocketService.userEnter(roomId, userId);
+        return websocketService.userEnter(roomId, userId, sessionId);
     }
 
     @MessageMapping("/{roomId}/user.exit")
