@@ -21,8 +21,4 @@ public class TipController {
         return tipService.payment(request);
     }
 
-    @RequestMapping("/listLocations")
-    public ResponseObject listLocations(){
-        return tipService.listLocations();
-    }
 }
