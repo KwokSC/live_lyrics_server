@@ -8,6 +8,7 @@ import com.chunkie.live_lyrics_server.exception.NoTypeMessageException;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -16,6 +17,8 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.chunkie.live_lyrics_server.common.Constants.MsgType.*;
@@ -33,9 +36,12 @@ public class WebsocketService {
     @Resource
     private ChatService chatService;
 
+    @Value("${live.auto-end-live}")
+    private int autoEndLive;
+
     private final Map<String, WebSocketSession> sessionPool = new ConcurrentHashMap<>();
 
-    private final Map<String, String> userSessionMap = new ConcurrentHashMap<>();
+    private final Map<String, String> roomSessionMap = new ConcurrentHashMap<>();
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketService.class);
 
@@ -84,7 +90,7 @@ public class WebsocketService {
 
     /**
      * @Description The function will be called right after a new user subscribe a specific room topic. (Please see
-     * {@link #subscribeRoom(String}) It will return a updated user list.
+     * {@link #subscribeRoom(String) It will return a updated user list.
      * @Param [roomId]
      * @Return com.chunkie.live_lyrics_server.common.MessageObject
      * @Author chunkie
@@ -92,7 +98,7 @@ public class WebsocketService {
      */
     public MessageObject userEnter(String roomId, String userId, String sessionId) {
         if (Objects.equals(liveService.userEnter(roomId, userId), HOST)) {
-            userSessionMap.put(sessionId, roomId);
+            roomSessionMap.put(sessionId, roomId);
             logger.info("Room {} entered session {}", roomId, sessionId);
         }
         MessageObject messageObject = new MessageObject();
@@ -128,24 +134,40 @@ public class WebsocketService {
         return messageObject;
     }
 
-    public void activateSession(String sessionId, WebSocketSession session) {
-        sessionPool.put(sessionId, session);
-        logger.info("Add a session. All connected sessions: {}", sessionPool);
-    }
 
-    public void deactivateSession(String sessionId) {
+    public void deactivateSession(String sessionId) throws IOException {
         WebSocketSession session = sessionPool.get(sessionId);
-        try {
-            if (userSessionMap.containsKey(sessionId)) {
-                liveService.endLive(userSessionMap.get(sessionId));
-                userSessionMap.remove(sessionId);
+        if (session != null) {
+            session.close();
+            String idleRoom = roomSessionMap.get(sessionId);
+            roomSessionMap.remove(sessionId);
+
+            // Automatically end live after session is deactivated for 300 seconds
+            if (idleRoom != null) {
+                logger.info("Room {} is now idle", idleRoom);
+                Timer timer = new Timer();
+                TimerTask timerTask = new TimerTask() {
+                    int counter = autoEndLive;
+                    @Override
+                    public void run() {
+                        if (counter >= 0) {
+                            counter--;
+                        }else {
+                            if (!roomSessionMap.containsValue(idleRoom)) {
+                                liveService.endLive(idleRoom);
+                            }
+                            timer.cancel();
+                        }
+                    }
+                };
+                timer.schedule(timerTask, 0,1000);
             }
-            if (session != null) session.close();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
         }
         sessionPool.remove(sessionId);
         logger.info("Deactivate session: {}", sessionId);
     }
 
+    public void activateSession(String id, WebSocketSession session) {
+        sessionPool.put(id, session);
+    }
 }

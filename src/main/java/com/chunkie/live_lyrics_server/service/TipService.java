@@ -4,17 +4,14 @@ import com.chunkie.live_lyrics_server.common.ResponseObject;
 import com.chunkie.live_lyrics_server.entity.request.PaymentRequest;
 import com.chunkie.live_lyrics_server.entity.response.PaymentResponse;
 import com.squareup.square.SquareClient;
-import com.squareup.square.api.LocationsApi;
 import com.squareup.square.api.PaymentsApi;
 import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.*;
-import com.squareup.square.models.Error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Service
 public class TipService {
@@ -53,5 +50,4 @@ public class TipService {
                     return ResponseObject.fail(null, "Payment failed");
                 }).join();
     }
-
 }

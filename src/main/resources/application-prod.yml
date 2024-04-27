@@ -23,3 +23,9 @@ spring:
 square:
   environment: production
   accessToken: EAAAlxDYB-mK3Xfonw14LqY5jmWBKOmBzGRr8pMEh1bsSu98Q0tA1xaN9MKN2MmH
+
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: https://www.busklive.live/
