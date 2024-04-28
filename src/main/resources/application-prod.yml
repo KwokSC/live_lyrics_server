@@ -28,4 +28,4 @@ management:
   endpoints:
     web:
       cors:
-        allowed-origins: https://www.busklive.live/
+        allowed-origins: /*
