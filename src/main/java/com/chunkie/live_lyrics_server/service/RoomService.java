@@ -6,6 +6,7 @@ import com.chunkie.live_lyrics_server.entity.*;
 import com.chunkie.live_lyrics_server.exception.UnauthorizedException;
 import com.chunkie.live_lyrics_server.mapper.RoomMapper;
 import com.chunkie.live_lyrics_server.repo.ProgrammeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,10 +26,10 @@ public class RoomService {
     private UserService userService;
 
     @Resource
-    private ProgrammeRepository programmeRepository;
+    private RoomMapper roomMapper;
 
     @Resource
-    private RoomMapper roomMapper;
+    private S3Service s3Service;
 
     public Boolean createRoom(Room room, String token) {
         String userId = authService.getUserByToken(token);
@@ -54,29 +55,6 @@ public class RoomService {
             return roomMapper.getRoomByUserAccount(userId);
         }
         throw new UnauthorizedException();
-    }
-
-    public ProgrammeDTO getProgrammeByRoomId(String roomId) {
-        Programme programme = programmeRepository.findByProgrammeId(roomId);
-        ProgrammeDTO programmeDTO = new ProgrammeDTO();
-        if (programme == null) {
-            Programme newProgramme = new Programme(roomId, new ArrayList<>());
-            newProgramme.setProgrammeId(roomId);
-            programmeRepository.save(newProgramme);
-            return null;
-        }
-        programmeDTO.setProgrammeId(programme.getProgrammeId());
-        for(Program program : programme.getProgramList()){
-            Song song = songService.getSongById(program.getSongId());
-            if(song == null){
-                continue;
-            }
-            ProgramDTO programDTO = new ProgramDTO();
-            programDTO.setSong(song);
-            programDTO.setRecommendations(program.getRecommendations());
-            programmeDTO.getProgramList().add(programDTO);
-        }
-        return programmeDTO;
     }
 
     private String generateRoomId() {

@@ -34,17 +34,9 @@ public class TipService {
                 .locationId(payload.getLocationId())
                 .build();
 
-        PaymentResponse response = new PaymentResponse();
         PaymentsApi paymentsApi = squareClient.getPaymentsApi();
         return paymentsApi.createPaymentAsync(request)
-                .thenApply(result -> {
-                    Payment payment = result.getPayment();
-                    response.setPaymentId(payment.getId());
-                    response.setPaymentStatus(payment.getStatus());
-                    response.setReceiptUrl(payment.getReceiptUrl());
-                    response.setOrderId(payment.getOrderId());
-                    return ResponseObject.success(response, "Payment created");
-                }).exceptionally(exception -> {
+                .thenApply(result -> ResponseObject.success(result.getPayment(), "Payment created")).exceptionally(exception -> {
                     ApiException e = (ApiException) exception.getCause();
                     logger.info("Exception: {}", e.getMessage());
                     return ResponseObject.fail(null, "Payment failed");

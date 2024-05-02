@@ -47,12 +47,6 @@ public class RoomController {
         return room != null ? ResponseObject.success(room, "Find the room.") : ResponseObject.fail(null, "Room not found.");
     }
 
-    @RequestMapping("/getProgrammeById")
-    public ResponseObject getProgrammeById(@RequestParam String roomId) {
-        ProgrammeDTO programme = roomService.getProgrammeByRoomId(roomId);
-        return ResponseObject.success(programme, "Find the programme for the room.");
-    }
-
     @RequestMapping("/getRoomByUserAccount")
     public ResponseObject getRoomByUserAccount(HttpServletRequest request) {
         String token = request.getHeader("Authorization");

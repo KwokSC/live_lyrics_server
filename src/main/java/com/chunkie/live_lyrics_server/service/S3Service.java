@@ -41,7 +41,6 @@ public class S3Service {
             key = key.replace(getExtension(file), "");
             PutObjectResult result = amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
             return result.getMetadata() != null;
-//            return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;
@@ -53,10 +52,9 @@ public class S3Service {
     }
 
     public String getFile(String key) {
-        try {
-            S3Object object = amazonS3.getObject(bucketName, key);
+        try (S3Object object = amazonS3.getObject(bucketName, key)) {
             return getS3Url(object);
-        } catch (AmazonS3Exception e) {
+        } catch (AmazonS3Exception | IOException e) {
             logger.error(e.getMessage(), e);
             return null;
         }
@@ -76,11 +74,9 @@ public class S3Service {
                 result.add(new LyricDTO(language, content));
             }
             return result;
-        } catch (AmazonS3Exception e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND.value())
-                return null;
-            else
-                throw e;
+        } catch (AmazonS3Exception | IOException e) {
+            logger.error(e.getMessage(), e);
+            return null;
         }
     }
 
@@ -109,9 +105,8 @@ public class S3Service {
         return extension;
     }
 
-    private String getObjectContent(String bucketName, String key) {
-        S3Object s3Object = amazonS3.getObject(bucketName, key);
-        try (InputStream inputStream = s3Object.getObjectContent()) {
+    private String getObjectContent(String bucketName, String key) throws IOException {
+        try (S3Object s3Object = amazonS3.getObject(bucketName, key); InputStream inputStream = s3Object.getObjectContent()) {
             return IOUtils.toString(inputStream);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

@@ -39,20 +39,6 @@ public class SongController {
         return ResponseObject.success(songService.getAudioById(songId), "Find audio of the song.");
     }
 
-    @RequestMapping("/song/submit")
-    public ResponseObject submit(@RequestParam("roomId") String roomId,
-                                 @RequestParam("song") String song,
-                                 @RequestParam("program") String program,
-                                 @RequestParam("audio") MultipartFile audio,
-                                 @RequestParam("album") @Nullable MultipartFile image,
-                                 @RequestParam("lyric") @Nullable List<MultipartFile> lyrics
-    ) {
-        return songService.submit(roomId, song, program, audio, image, lyrics) ? ResponseObject.success(null, "Upload" +
-                " " +
-                "successfully.") :
-                ResponseObject.fail(null, "Upload unsuccessfully.");
-    }
-
     @RequestMapping("/song/deleteSong")
     public ResponseObject deleteSong(@RequestParam String roomId, @RequestParam String songId) {
         songService.deleteSong(roomId, songId);
@@ -76,6 +62,11 @@ public class SongController {
         return songService.uploadAlbumCover(album) ? ResponseObject.success(null, "Upload successfully.") :
                 ResponseObject.fail(null, "Fail to upload album cover.");
     }
+
+//    @RequestMapping("/song/uploadRecommendationImg")
+//    public ResponseObject uploadRecommendationImg(@RequestParam(value = "image") List<MultipartFile> images){
+//
+//    }
 
     @RequestMapping("/song/uploadLyric")
     public ResponseObject uploadLyric(@RequestParam(value = "lyric") List<MultipartFile> lyric) {
