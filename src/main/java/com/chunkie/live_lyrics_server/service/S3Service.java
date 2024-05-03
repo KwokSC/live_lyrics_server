@@ -9,7 +9,6 @@ import com.chunkie.live_lyrics_server.dto.LyricDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,9 +51,10 @@ public class S3Service {
     }
 
     public String getFile(String key) {
-        try (S3Object object = amazonS3.getObject(bucketName, key)) {
+        try {
+            S3Object object = amazonS3.getObject(bucketName, key);
             return getS3Url(object);
-        } catch (AmazonS3Exception | IOException e) {
+        } catch (AmazonS3Exception e) {
             logger.error(e.getMessage(), e);
             return null;
         }
@@ -74,7 +74,7 @@ public class S3Service {
                 result.add(new LyricDTO(language, content));
             }
             return result;
-        } catch (AmazonS3Exception | IOException e) {
+        } catch (AmazonS3Exception e) {
             logger.error(e.getMessage(), e);
             return null;
         }
@@ -105,8 +105,9 @@ public class S3Service {
         return extension;
     }
 
-    private String getObjectContent(String bucketName, String key) throws IOException {
-        try (S3Object s3Object = amazonS3.getObject(bucketName, key); InputStream inputStream = s3Object.getObjectContent()) {
+    private String getObjectContent(String bucketName, String key){
+        S3Object s3Object = amazonS3.getObject(bucketName, key);
+        try (InputStream inputStream = s3Object.getObjectContent()) {
             return IOUtils.toString(inputStream);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
