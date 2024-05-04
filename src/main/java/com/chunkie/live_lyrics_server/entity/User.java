@@ -17,4 +17,8 @@ public class User {
     private String summary;
 
     private Gender gender;
+
+    private String instagram;
+
+    private String tiktok;
 }

@@ -56,6 +56,8 @@ public class UserService {
             profile.setGender(String.valueOf(user.getGender()));
             profile.setSummary(user.getSummary());
             profile.setProfileImg(s3Service.getFile(AVATAR_IMAGE_PREFIX.replace("*", user.getUserId())));
+            profile.setTiktok(user.getTiktok());
+            profile.setInstagram(user.getInstagram());
         }
         return profile;
     }

@@ -9,6 +9,8 @@
         <result column="gender" jdbcType="VARCHAR"
                 typeHandler="com.chunkie.live_lyrics_server.handler.GeneralEnumTypeHandler" property="gender"/>
         <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
+        <result column="tiktok" jdbcType="VARCHAR" property="tiktok"/>
     </resultMap>
 
     <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">

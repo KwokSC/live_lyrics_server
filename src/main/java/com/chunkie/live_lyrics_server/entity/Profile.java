@@ -14,4 +14,8 @@ public class Profile {
     private String gender;
 
     private String summary;
+
+    private String instagram;
+
+    private String tiktok;
 }
