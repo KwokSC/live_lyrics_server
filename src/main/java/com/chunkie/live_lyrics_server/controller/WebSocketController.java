@@ -40,6 +40,12 @@ public class WebSocketController {
         return websocketService.userExit(roomId, userId);
     }
 
+    @MessageMapping("/{roomId}/tip")
+    @SendTo("/topic/{roomId}/public")
+    public MessageObject tipFlag(@DestinationVariable String roomId, SimpMessageHeaderAccessor accessor){
+        return websocketService.handleTipFlag();
+    }
+
     @MessageMapping("/{roomId}/chat")
     @SendTo("/topic/{roomId}/public")
     public MessageObject chat(@DestinationVariable String roomId, @Payload String message){

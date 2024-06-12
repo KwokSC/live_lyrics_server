@@ -17,5 +17,7 @@ public class Profile {
 
     private String instagram;
 
+    private String youtube;
+
     private String tiktok;
 }

@@ -3,9 +3,9 @@ package com.chunkie.live_lyrics_server.entity;
 import lombok.Data;
 
 @Data
-public class Money {
+public class Tip {
 
-    private Integer amount;
+    private String userId;
 
-    private String currency;
+    private Money money;
 }

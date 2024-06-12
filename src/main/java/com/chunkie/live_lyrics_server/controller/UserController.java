@@ -28,6 +28,11 @@ public class UserController {
         return response != null ? ResponseObject.success(response, "Successfully login.") : ResponseObject.fail(null, "Fail to login.");
     }
 
+    @RequestMapping("/register")
+    public ResponseObject register(@RequestBody User user) {
+        return userService.register(user) ? ResponseObject.success(null, "Successfully register.") : ResponseObject.fail(null, "Fail to register.");
+    }
+
     @RequestMapping("/getUserInfo")
     public ResponseObject getUserInfo(@RequestParam String token) {
         String userAccount = authService.getUserByToken(token);

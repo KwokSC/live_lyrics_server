@@ -21,4 +21,6 @@ public class User {
     private String instagram;
 
     private String tiktok;
+
+    private String youtube;
 }

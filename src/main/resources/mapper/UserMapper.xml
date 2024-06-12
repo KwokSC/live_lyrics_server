@@ -13,6 +13,13 @@
         <result column="tiktok" jdbcType="VARCHAR" property="tiktok"/>
     </resultMap>
 
+    <insert id="insertUser" parameterType="com.chunkie.live_lyrics_server.entity.User">
+        INSERT INTO room_info(user_id, user_account, user_password, user_name, summary, gender, instagram, tiktok,
+                              youtube)
+        VALUES (#{userId}, #{userAccount}, #{userPassword}, #{userName}, #{summary}, #{gender}, #{instagram},
+                #{tiktok}, #{youtube})
+    </insert>
+
     <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT * FROM user_info WHERE user_id = #{userId}
     </select>

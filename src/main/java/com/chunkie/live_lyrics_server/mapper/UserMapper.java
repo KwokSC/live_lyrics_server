@@ -9,4 +9,6 @@ public interface UserMapper {
     User getUserById(String id);
 
     User getUserByAccount(String account);
+
+    int insertUser(User user);
 }

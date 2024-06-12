@@ -5,6 +5,7 @@ import com.chunkie.live_lyrics_server.entity.User;
 import com.chunkie.live_lyrics_server.entity.UserInfo;
 import com.chunkie.live_lyrics_server.entity.response.LoginResponse;
 import com.chunkie.live_lyrics_server.mapper.UserMapper;
+import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,9 @@ public class UserService {
 
     private final String AVATAR_IMAGE_PREFIX = "resources/images/profile/*/avatar";
 
-    public void register(User user) {
+    public boolean register(User user) {
         user.setUserId(generateUserId());
+        return userMapper.insertUser(user) != 0;
     }
 
     public User getUserById(String id){
@@ -47,6 +49,10 @@ public class UserService {
         return userInfo;
     }
 
+    public boolean uploadAvatar(MultipartFile file, String userId) {
+        return s3Service.uploadFile(AVATAR_IMAGE_PREFIX.replace("*",userId), file);
+    }
+
     public Profile getProfileByAccount(String account){
         User user = userMapper.getUserByAccount(account);
         Profile profile = new Profile();
@@ -57,6 +63,7 @@ public class UserService {
             profile.setSummary(user.getSummary());
             profile.setProfileImg(s3Service.getFile(AVATAR_IMAGE_PREFIX.replace("*", user.getUserId())));
             profile.setTiktok(user.getTiktok());
+            profile.setYoutube(user.getYoutube());
             profile.setInstagram(user.getInstagram());
         }
         return profile;

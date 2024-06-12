@@ -124,6 +124,13 @@ public class WebsocketService {
         return messageObject;
     }
 
+    /**
+     * @Description The function to handle chat message and broadcast.
+     * @Param [message, roomId]
+     * @Return com.chunkie.live_lyrics_server.common.MessageObject
+     * @Author chunkie
+     * @Date 2024/5/16
+     */
     public MessageObject handleChatMessage(String message, String roomId) {
         MessageObject messageObject = new MessageObject();
         ChatMessage chatMessage = gson.fromJson(message, ChatMessage.class);
@@ -131,6 +138,12 @@ public class WebsocketService {
         chatService.handleNewMessage(roomId, chatMessage);
         messageObject.setType(CHAT);
         messageObject.setData(chatMessage);
+        return messageObject;
+    }
+
+    public MessageObject handleTipFlag(){
+        MessageObject messageObject = new MessageObject();
+        messageObject.setType(TIP);
         return messageObject;
     }
 

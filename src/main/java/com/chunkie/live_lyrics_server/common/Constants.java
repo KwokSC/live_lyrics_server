@@ -20,6 +20,8 @@ public interface Constants {
         // CHAT: message for user chatting in the room.
         String CHAT = "CHAT";
 
+        String TIP = "TIP";
+
         String USER_ENTER = "USER ENTER";
         String USER_EXIT = "USER EXIT";
     }
